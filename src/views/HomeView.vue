@@ -1,8 +1,13 @@
 <script setup lang="ts">
+  import DefaultTemplate from '../templates/DefaultTemplate.vue';  
 </script>
 
 <template>
-  Homepage
+  <DefaultTemplate>
+    <template v-slot:main>
+      Homepage
+    </template>
+  </DefaultTemplate>
 </template>
 
 <style scoped>
