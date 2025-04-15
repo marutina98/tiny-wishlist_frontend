@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import { usePrimeVue } from 'primevue';
+import PrimeVue from 'primevue/config';
 
 import App from './App.vue';
 import router from './router';
@@ -8,7 +8,7 @@ import router from './router';
 const app = createApp(App);
 
 app.use(createPinia());
-app.use(usePrimeVue);
+app.use(PrimeVue);
 app.use(router);
 
 app.mount('#app');
