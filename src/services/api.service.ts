@@ -5,7 +5,7 @@ interface IRequest {
   apiURL: string,
   method: string,
   token?: string,
-  body?: object,
+  body?: string,
 }
 
 interface IRequestRegister {
@@ -27,7 +27,7 @@ class SApi {
     return await this.getRequest({
       apiURL: `${this.baseURL}/auth/register`,
       method: 'POST',
-      body
+      body: JSON.stringify(body),
     });
   }
 
@@ -35,7 +35,7 @@ class SApi {
     return await this.getRequest({
       apiURL: `${this.baseURL}/auth/login`,
       method: 'POST',
-      body
+      body: JSON.stringify(body),
     });
   }
 
