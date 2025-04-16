@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import DefaultTemplate from '../templates/DefaultTemplate.vue';  
+  import DefaultTemplate from '../templates/DefaultTemplate.vue';
 </script>
 
 <template>
