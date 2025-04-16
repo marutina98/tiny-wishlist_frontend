@@ -2,6 +2,8 @@ import type { App as Application } from 'vue';
 
 import { useCookies } from '@vueuse/integrations/useCookies';
 
+import SApi from '@/services/api.service';
+
 class Auth {
 
   private cookie = useCookies(['token']);
