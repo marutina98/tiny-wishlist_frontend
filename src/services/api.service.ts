@@ -1,23 +1,6 @@
-
-// @todo: move interfaces in their own file
-
-interface IRequest {
-  apiURL: string,
-  method: string,
-  token?: string,
-  body?: string,
-}
-
-interface IRequestRegister {
-  email: string,
-  username: string,
-  password: string,
-}
-
-interface IRequestLogin {
-  username: string,
-  password: string,
-}
+import type IRequestLogin from '@/interfaces/request-login.interface';
+import type IRequestConfig from '@/interfaces/request-config.interface';
+import type IRequestRegister from '@/interfaces/request-register.interface';
 
 class SApi {
 
@@ -39,11 +22,11 @@ class SApi {
     });
   }
 
-  public getRequest(request: IRequest) {
-    return fetch(request.apiURL, {
+  public getRequest(requestConfig: IRequestConfig) {
+    return fetch(requestConfig.apiURL, {
       mode: 'cors',
-      method: request.method,
-      headers: this.getHeaders(request),
+      method: requestConfig.method,
+      headers: this.getHeaders(requestConfig),
     });
   }
 
