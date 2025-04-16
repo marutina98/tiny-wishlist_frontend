@@ -4,7 +4,7 @@ import { useCookies } from '@vueuse/integrations/useCookies';
 
 class Auth {
 
-  public cookie = useCookies(['token']);
+  private cookie = useCookies(['token']);
 
   public async register() {
     console.log('Register');
@@ -15,7 +15,7 @@ class Auth {
   }
 
   public logout() {
-    console.log('Logout');
+    this.removeToken();
   }
 
   public addToken(token: string) {
@@ -24,6 +24,14 @@ class Auth {
 
   public removeToken() {
     this.cookie.remove('token');
+  }
+
+  public isAuthenticated() {
+    return this.cookie.get('token') ? true : false;
+  }
+
+  public isGuest() {
+    return !this.isAuthenticated;
   }
 
 }
