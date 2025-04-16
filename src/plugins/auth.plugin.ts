@@ -1,6 +1,10 @@
 import type { App as Application } from 'vue';
 
+import { useCookies } from '@vueuse/integrations/useCookies';
+
 class Auth {
+
+  public cookie = useCookies(['token']);
 
   public async register() {
     console.log('Register');
@@ -12,6 +16,14 @@ class Auth {
 
   public logout() {
     console.log('Logout');
+  }
+
+  public addToken(token: string) {
+    this.cookie.set('token', token);
+  }
+
+  public removeToken() {
+    this.cookie.remove('token');
   }
 
 }
