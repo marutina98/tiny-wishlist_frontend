@@ -43,11 +43,13 @@
     // create token cookie
 
     const data = toRaw(state);
-    const request = await auth.login(data);
+    const request = await auth.register(data);
 
     if (request.ok) {
 
-      const token = request.token;
+      const response = await request.json();
+      const token = response.token;
+      
       auth.addToken(token);
 
       toast.add({

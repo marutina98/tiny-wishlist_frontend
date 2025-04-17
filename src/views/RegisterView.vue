@@ -51,12 +51,14 @@
     const data = toRaw(state);
     const request = await auth.register(data);
 
-    console.log(data);
-
     if (request.ok) {
 
-      const token = request.token;
+      const response = await request.json();
+      const token = response.token;
+      
       auth.addToken(token);
+
+      // @todo: move to homepage
 
       toast.add({
         title: 'Success!',
