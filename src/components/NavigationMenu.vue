@@ -75,9 +75,14 @@
 </script>
 
 <template>
-  <UContainer>
-    <UNavigationMenu :items />
+  <UContainer class="min-w-full flex justify-between content-center gap-4 p-4 border-b border-b-stone-200">
+    <div class="left">
+      <UIcon name="i-system-uicons:gift" class="size-12" />
+    </div>
+    <div class="right">
+      <UNavigationMenu :items />
+    </div>
   </UContainer>
 </template>
 
-<script scoped></script>
+<style scoped></style>
