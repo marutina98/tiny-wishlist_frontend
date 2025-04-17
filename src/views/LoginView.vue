@@ -2,8 +2,14 @@
 
   import * as v from 'valibot';
 
-  import AlternativeTemplate from '../templates/AlternativeTemplate.vue';
   import { reactive } from 'vue';
+
+  import AlternativeTemplate from '../templates/AlternativeTemplate.vue';
+
+  const passwordRegexErrorText = 'Your password must contain at least a lowercase character,' +
+                                 'an uppercase character, a number and a special character.';
+
+  const toast = useToast();
   
   const schema = v.object({
 
@@ -17,7 +23,7 @@
     password: v.pipe(
       v.string(),
       v.nonEmpty('Please enter your password.'),
-      v.regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).*$/, 'Your password must contain at least a lowercase character, an uppercase character, a number and a special character.'),
+      v.regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).*$/, passwordRegexErrorText),
       v.minLength(8, 'Your password must have 8 characters or more.'),
     )
 
@@ -29,7 +35,15 @@
   });
 
   const onSubmit = async () => {
-    console.log(state);
+
+    // @todo: login and move to homepage
+
+    toast.add({
+      title: 'Success!',
+      description: 'You have succesfully logged in.',
+      color: 'success',
+    });
+    
   }
 
 </script>
@@ -47,7 +61,7 @@
         </UFormField>
 
         <UButton type="submit">
-          Submit
+          Login
         </UButton>
       </UForm>
     </template>
