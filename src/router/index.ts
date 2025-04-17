@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vu
 
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
+import RegisterView from '@/views/RegisterView.vue';
 import ErrorRedirect from '@/components/ErrorRedirect.vue';
 import Error404View from '@/views/Error404View.vue';
 
@@ -28,6 +29,14 @@ const routes = [
   {
     path: '/login',
     component: LoginView,
+    beforeEnter: (to: RouteLocationNormalized, from: RouteLocationNormalized, next: Function) => {
+      GIsGuest(to, from, next);
+    }
+  },
+
+  {
+    path: '/register',
+    component: RegisterView,
     beforeEnter: (to: RouteLocationNormalized, from: RouteLocationNormalized, next: Function) => {
       GIsGuest(to, from, next);
     }
