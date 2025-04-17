@@ -3,6 +3,7 @@
   import * as v from 'valibot';
 
   import { reactive, inject, toRaw } from 'vue';
+  import { useRouter } from 'vue-router';
 
   import AlternativeTemplate from '../templates/AlternativeTemplate.vue';
 
@@ -10,6 +11,8 @@
 
   const passwordRegexErrorText = 'Your password must contain at least a lowercase character,' +
                                  'an uppercase character, a number and a special character.';
+
+  const router = useRouter();
 
   const auth = inject('auth') as IAuth;
   const toast = useToast();
@@ -51,6 +54,10 @@
       const token = response.token;
       
       auth.addToken(token);
+
+      router.push({
+        path: '/'
+      });
 
       toast.add({
         title: 'Success!',
