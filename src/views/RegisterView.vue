@@ -13,6 +13,11 @@
   
   const schema = v.object({
 
+    email: v.pipe(
+      v.string(),
+      v.email('Insert a valid email.'),
+    ),
+
     username: v.pipe(
       v.string(),
       v.nonEmpty('Please enter your username.'),
@@ -30,13 +35,14 @@
   });
 
   const state = reactive({
+    email: '',
     username: '',
     password: '',
   });
 
   const onSubmit = async () => {
 
-    // @todo: login and move to homepage
+    // @todo: register and move to homepage
     // create token cookie
 
     toast.add({
@@ -53,6 +59,10 @@
   <AlternativeTemplate>
     <template v-slot:main>
       <UForm class="space-y-4" :schema :state @submit.prevent="onSubmit">
+        <UFormField label="Email" name="email">
+          <UInput v-model="state.email" />
+        </UFormField>
+
         <UFormField label="Username" name="username">
           <UInput v-model="state.username" />
         </UFormField>
@@ -62,7 +72,7 @@
         </UFormField>
 
         <UButton type="submit">
-          Login
+          Register
         </UButton>
       </UForm>
     </template>
