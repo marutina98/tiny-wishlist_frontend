@@ -34,6 +34,7 @@ class SApi {
     if (body) settings.body = body;
 
     return fetch(requestConfig.apiURL, settings);
+    
   }
 
   public getHeaders({ method, token }: { method: string, token?: string }) {
