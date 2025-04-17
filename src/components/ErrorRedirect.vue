@@ -7,7 +7,7 @@
 
   onBeforeMount(() => {
     router.push({
-      path: '/not-found'
+      path: '/404'
     });
   });
   
