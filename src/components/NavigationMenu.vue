@@ -57,7 +57,8 @@
               to: '/login'
             },
             {
-              label: 'Sign Up'
+              label: 'Sign Up',
+              to: '/register'
             }
           ]
         }
