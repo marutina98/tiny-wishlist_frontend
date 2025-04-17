@@ -33,7 +33,7 @@ class Auth {
   }
 
   public isGuest() {
-    return !this.isAuthenticated;
+    return !this.isAuthenticated();
   }
 
 }

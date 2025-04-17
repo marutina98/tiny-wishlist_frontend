@@ -53,7 +53,8 @@
           icon: 'i-system-uicons:user-male',
           children: [
             {
-              label: 'Sign In'
+              label: 'Sign In',
+              to: '/login'
             },
             {
               label: 'Sign Up'
