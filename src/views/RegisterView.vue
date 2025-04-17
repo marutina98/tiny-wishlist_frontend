@@ -2,13 +2,16 @@
 
   import * as v from 'valibot';
 
-  import { reactive } from 'vue';
+  import { reactive, inject, toRaw } from 'vue';
 
   import AlternativeTemplate from '../templates/AlternativeTemplate.vue';
+
+  import type IAuth from '@/interfaces/auth.interface';
 
   const passwordRegexErrorText = 'Your password must contain at least a lowercase character,' +
                                  'an uppercase character, a number and a special character.';
 
+  const auth = inject('auth') as IAuth;
   const toast = useToast();
   
   const schema = v.object({
@@ -42,14 +45,30 @@
 
   const onSubmit = async () => {
 
-    // @todo: register and move to homepage
+    // register and move to homepage
     // create token cookie
 
-    toast.add({
-      title: 'Success!',
-      description: 'You have succesfully registered.',
-      color: 'success',
-    });
+    const data = toRaw(state);
+    const request = await auth.register(data);
+
+    if (request.ok) {
+
+      const token = request.token;
+      auth.addToken(token);
+
+      toast.add({
+        title: 'Success!',
+        description: 'You have succesfully registered.',
+        color: 'success',
+      });
+
+    } else {
+      toast.add({
+        title: 'Error!',
+        description: 'Could not create an account, please try again.',
+        color: 'error',
+      });
+    }
     
   }
 
