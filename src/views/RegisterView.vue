@@ -51,6 +51,8 @@
     const data = toRaw(state);
     const request = await auth.register(data);
 
+    console.log(data);
+
     if (request.ok) {
 
       const token = request.token;

@@ -23,11 +23,17 @@ class SApi {
   }
 
   public getRequest(requestConfig: IRequestConfig) {
-    return fetch(requestConfig.apiURL, {
+
+    const settings: RequestInit = {
       mode: 'cors',
       method: requestConfig.method,
       headers: this.getHeaders(requestConfig),
-    });
+    }
+
+    const body = requestConfig.body;
+    if (body) settings.body = body;
+
+    return fetch(requestConfig.apiURL, settings);
   }
 
   public getHeaders({ method, token }: { method: string, token?: string }) {
