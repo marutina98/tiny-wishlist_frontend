@@ -47,7 +47,7 @@
 
     toast.add({
       title: 'Success!',
-      description: 'You have succesfully logged in.',
+      description: 'You have succesfully registered.',
       color: 'success',
     });
     
