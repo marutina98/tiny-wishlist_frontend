@@ -23,6 +23,9 @@
     setItems(status);
   });
 
+  // Logout when clicking on the
+  // NavigationMenu 'Logout' Button
+
   const logout = () => {
 
     const toast = useToast();
@@ -36,6 +39,10 @@
     });
 
   }
+
+  // Set the NavigationMenu items based
+  // on the user being authenticated or
+  // a guest
 
   const setItems = (status: boolean) => {
 
@@ -86,6 +93,11 @@
     items.value = navigationMenuItems;
 
   }
+
+  // Set the initial NavigationMenu
+  // based on the isAuthenticated.value
+  // at the moment before the mount
+  // of the component
 
   onBeforeMount(() => {
     setItems(isAuthenticated.value);
