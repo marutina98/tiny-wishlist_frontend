@@ -3,7 +3,11 @@
   import type { Ref } from 'vue';
   import type { NavigationMenuItem } from '@nuxt/ui';
   
-  import { ref, computed, watch, onBeforeMount } from 'vue';
+  import { ref, inject, computed, watch, onBeforeMount } from 'vue';7
+
+  import IAuth from './../interfaces/auth.interface.ts';
+
+  const auth = inject('auth') as IAuth;
   
   const props = defineProps({
     isAuthenticated: Boolean
@@ -19,6 +23,20 @@
     setItems(status);
   });
 
+  const logout = () => {
+
+    const toast = useToast();
+    
+    auth.removeToken();
+
+    toast.add({
+      title: 'Success!',
+      description: 'You have succesfully logged out.',
+      color: 'success',
+    });
+
+  }
+
   const setItems = (status: boolean) => {
 
     const navigationMenuItems: NavigationMenuItem[] = [
@@ -28,8 +46,6 @@
         to: '/',
       }
     ];
-
-    // @todo: add logout
 
     if (status) {
 
@@ -42,6 +58,7 @@
         {
           label: 'Logout',
           icon: 'i-system-uicons:close',
+          onSelect: (event: Event) => logout(),
         }
       ]);
 
