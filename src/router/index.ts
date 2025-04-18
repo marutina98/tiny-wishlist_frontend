@@ -8,6 +8,7 @@ import Error404View from '@/views/Error404View.vue';
 
 import { GIsUser } from '@/guards/is-user.guard';
 import { GIsGuest } from '@/guards/is-guest.guard';
+import DashboardView from '@/views/DashboardView.vue';
 
 const routes = [
 
@@ -39,6 +40,14 @@ const routes = [
     component: RegisterView,
     beforeEnter: (to: RouteLocationNormalized, from: RouteLocationNormalized, next: Function) => {
       GIsGuest(to, from, next);
+    }
+  },
+
+  {
+    path: '/dashboard',
+    component: DashboardView,
+    beforeEnter: (to: RouteLocationNormalized, from: RouteLocationNormalized, next: Function) => {
+      GIsUser(to, from, next);
     }
   }
 
