@@ -38,6 +38,7 @@
         {
           label: 'Dashboard',
           icon: 'i-system-uicons:settings',
+          to: '/dashboard'
         },
         {
           label: 'Logout',
