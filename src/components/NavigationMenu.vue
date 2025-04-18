@@ -29,8 +29,7 @@
       }
     ];
 
-    // @todo: if guest show login/register
-    // otherwise show dashboard and logout
+    // @todo: add logout
 
     if (status) {
 
