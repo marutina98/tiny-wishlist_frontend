@@ -1,14 +1,20 @@
-import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router';
+import { createRouter, createWebHistory, type RouteLocationGeneric, type RouteLocationNormalized } from 'vue-router';
+import { inject } from 'vue';
+
+import SApi from '@/services/api.service';
 
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import ErrorRedirect from '@/components/ErrorRedirect.vue';
 import Error404View from '@/views/Error404View.vue';
+import DashboardView from '@/views/DashboardView.vue';
+import ListView from '@/views/ListView.vue';
 
 import { GIsUser } from '@/guards/is-user.guard';
 import { GIsGuest } from '@/guards/is-guest.guard';
-import DashboardView from '@/views/DashboardView.vue';
+
+import type IAuth from '@/interfaces/auth.interface';
 
 const routes = [
 
@@ -48,6 +54,21 @@ const routes = [
     component: DashboardView,
     beforeEnter: (to: RouteLocationNormalized, from: RouteLocationNormalized, next: Function) => {
       GIsUser(to, from, next);
+    }
+  },
+
+  // Pass via props the request of the list
+
+  {
+    path: '/list/:id',
+    component: ListView,
+    props: {
+      getList: async (route: RouteLocationGeneric) => {
+        const auth = inject('auth') as IAuth;
+        const id = route.params.id as string;
+        const token = auth.getToken();
+        return await SApi.getList(id, token);
+      }
     }
   }
 

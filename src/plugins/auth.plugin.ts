@@ -31,8 +31,12 @@ class Auth {
     this.cookie.remove('token');
   }
 
+  public getToken() {
+    return this.cookie.get('token');
+  }
+
   public isAuthenticated() {
-    return this.cookie.get('token') ? true : false;
+    return this.getToken() ? true : false;
   }
 
   public isGuest() {

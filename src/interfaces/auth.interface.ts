@@ -3,6 +3,7 @@ export default interface IAuth {
   login: Function,
   logout: Function,
   addToken: Function,
+  getToken: Function,
   removeToken: Function,
   isAuthenticated: Function,
   isGuest: Function,

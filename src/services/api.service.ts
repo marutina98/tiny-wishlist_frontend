@@ -22,6 +22,14 @@ class SApi {
     });
   }
 
+  public async getList(id: string, token: string) {
+    return await this.getRequest({
+      apiURL: `${this.baseURL}/list/${id}`,
+      method: 'GET',
+      token: token,
+    });
+  }
+
   public getRequest(requestConfig: IRequestConfig) {
 
     const settings: RequestInit = {
