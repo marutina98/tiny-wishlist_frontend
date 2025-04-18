@@ -20,15 +20,17 @@
 
   onBeforeMount(async () => {
 
-    const request = await props.getList(route);
-    
-    if (request.ok) {
-      const response = await request.json();
-      data.list = response;
-    } else {
-      router.push({
-        path: '/not-found'
-      });
+    try {
+
+      const request = await props.getList(route);
+
+      if (request.ok) {
+        const response = await request.json();
+        data.list = response;
+      }
+
+    } catch (error: unknown) {
+      console.error(error);
     }
 
   });
@@ -38,7 +40,15 @@
 <template>
   <DefaultTemplate>
     <template v-slot:main>
-      {{ data.list }}
+      
+      <template v-if="data.list">
+        {{ data.list }}
+      </template>
+
+      <template v-else>
+        List is missing or private.
+      </template>
+
     </template>
   </DefaultTemplate>
 </template>
