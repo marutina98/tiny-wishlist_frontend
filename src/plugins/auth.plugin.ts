@@ -3,6 +3,7 @@ import type { App as Application } from 'vue';
 import { useCookies } from '@vueuse/integrations/useCookies';
 
 import SApi from '@/services/api.service';
+
 import type IRequestRegister from '@/interfaces/request-register.interface';
 import type IRequestLogin from '@/interfaces/request-login.interface';
 
