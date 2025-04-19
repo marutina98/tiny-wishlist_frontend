@@ -50,10 +50,27 @@
     <template v-slot:main>
       
       <template v-if="data.list">
+
+        <!-- @todo: list -->
         
         <header>
           <h2>{{ data.list.title }}</h2>
+          <p>{{ data.list.description }}</p>
         </header>
+
+        <template v-for="group of data.list.groups" :key="group.id">
+          <div class="group">
+
+            <!-- @todo: group -->
+
+            <template v-for="item of group.items" :key="item.id">
+              <div class="group-item">
+                <!-- @todo: item -->
+              </div>
+            </template>
+
+          </div>
+        </template>
 
       </template>
 
