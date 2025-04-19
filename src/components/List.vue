@@ -98,7 +98,7 @@
   }
 
   .groups {
-    @apply gap-8 grid grid-cols-2 p-2;
+    @apply gap-8 flex flex-col p-2;
   }
 
 </style>
