@@ -3,9 +3,9 @@
   import type { Ref } from 'vue';
   import type { NavigationMenuItem } from '@nuxt/ui';
   
-  import { ref, inject, computed, watch, onBeforeMount } from 'vue';7
+  import { ref, inject, computed, watch, onBeforeMount } from 'vue';
 
-  import IAuth from './../interfaces/auth.interface.ts';
+  import type IAuth from './../interfaces/auth.interface.ts';
 
   const auth = inject('auth') as IAuth;
   

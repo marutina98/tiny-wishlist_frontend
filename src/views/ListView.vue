@@ -4,6 +4,7 @@
   import { useRoute, useRouter } from 'vue-router';
 
   import DefaultTemplate from '../templates/DefaultTemplate.vue';
+  import List from '@/components/List.vue';
 
   import type IList from '@/interfaces/list.interface';
   import type IAuth from '@/interfaces/auth.interface';
@@ -56,33 +57,9 @@
 
 <template>
   <DefaultTemplate>
-
-
-
-    <!-- <template v-slot:main>
-      
-      <template v-if="data.list">
-        
-        <header>
-          <h2>{{ data.list.title }}</h2>
-          <p>{{ data.list.description }}</p>
-        </header>
-
-        <template v-for="group of data.list.groups" :key="group.id">
-          <div class="group">
-
-            <template v-for="item of group.items" :key="item.id">
-              <div class="group-item">
-              </div>
-            </template>
-
-          </div>
-        </template>
-
-      </template>
-
-    </template> -->
-
+    <template v-slot:main>
+      <List v-if="data.list" :list="data.list" />  
+    </template>
   </DefaultTemplate>
 </template>
 
