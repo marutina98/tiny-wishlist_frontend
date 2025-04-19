@@ -15,8 +15,19 @@
 
 <template>
 
-  {{ item }}
+  <div class="item">
+    Item
+  </div>
 
 </template>
 
-<style scoped></style>
+<style scoped>
+
+  @reference 'tailwindcss';
+
+  .item {
+    background-color: green;
+    @apply p-2;
+  }
+
+</style>
