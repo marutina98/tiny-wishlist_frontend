@@ -1,41 +1,50 @@
 <script setup lang="ts">
 
-  import { reactive, onBeforeMount, type Reactive } from 'vue';
-  import { useRoute } from 'vue-router';
+  import { reactive, onBeforeMount, type Reactive, inject } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
 
   import DefaultTemplate from '../templates/DefaultTemplate.vue';
+
   import type IList from '@/interfaces/list.interface';
+  import type IAuth from '@/interfaces/auth.interface';
+
+  import SApi from '@/services/api.service';
 
   const route = useRoute();
-
-  const props = defineProps({
-    getList: {
-      type: Function,
-      required: true,
-    }
-  });
+  const router = useRouter();
 
   const data: Reactive<{ list: IList|null }> = reactive({
     list: null
   });
 
+  const fetchList = async () => {
+    const auth = inject('auth') as IAuth;
+    const token = auth.getToken();
+    const listId = route.params.id as string;
+    return await SApi.getList(listId, token);
+  }
+
+  const redirectError = () => {
+    router.push({
+      path: '/error/list'
+    });
+  }
+
   onBeforeMount(async () => {
 
-    // @todo: redirect to another page
-    // to show that the list is missing or
-    // private
+    // Fetch List and if missing
+    // redirect to Error page.
 
     try {
 
-      const request = await props.getList(route);
+      const request = await fetchList();
 
       if (request.ok) {
         const response = await request.json();
         data.list = response;
-
-        console.log(response);
-
       }
+
+      if (!data.list) redirectError();
 
     } catch (error: unknown) {
       console.error(error);
@@ -47,11 +56,12 @@
 
 <template>
   <DefaultTemplate>
-    <template v-slot:main>
+
+
+
+    <!-- <template v-slot:main>
       
       <template v-if="data.list">
-
-        <!-- @todo: list -->
         
         <header>
           <h2>{{ data.list.title }}</h2>
@@ -61,11 +71,8 @@
         <template v-for="group of data.list.groups" :key="group.id">
           <div class="group">
 
-            <!-- @todo: group -->
-
             <template v-for="item of group.items" :key="item.id">
               <div class="group-item">
-                <!-- @todo: item -->
               </div>
             </template>
 
@@ -74,7 +81,8 @@
 
       </template>
 
-    </template>
+    </template> -->
+
   </DefaultTemplate>
 </template>
 

@@ -6,10 +6,11 @@ import SApi from '@/services/api.service';
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
-import ErrorRedirect from '@/components/ErrorRedirect.vue';
-import Error404View from '@/views/Error404View.vue';
 import DashboardView from '@/views/DashboardView.vue';
 import ListView from '@/views/ListView.vue';
+import ErrorRedirect from '@/components/ErrorRedirect.vue';
+import Error404View from '@/views/Error404View.vue';
+import ErrorListView from '@/views/ErrorListView.vue';
 
 import { GIsUser } from '@/guards/is-user.guard';
 import { GIsGuest } from '@/guards/is-guest.guard';
@@ -24,8 +25,13 @@ const routes = [
   },
 
   {
-    path: '/404',
+    path: '/error/404',
     component: Error404View,
+  },
+
+  {
+    path: '/error/list',
+    component: ErrorListView,
   },
 
   {
@@ -62,14 +68,6 @@ const routes = [
   {
     path: '/list/:id',
     component: ListView,
-    props: {
-      getList: async (route: RouteLocationGeneric) => {
-        const auth = inject('auth') as IAuth;
-        const id = route.params.id as string;
-        const token = auth.getToken();
-        return await SApi.getList(id, token);
-      }
-    }
   }
 
 ];

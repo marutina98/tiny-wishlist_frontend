@@ -7,7 +7,7 @@
 
   onBeforeMount(() => {
     router.push({
-      path: '/404'
+      path: '/error/404'
     });
   });
   
