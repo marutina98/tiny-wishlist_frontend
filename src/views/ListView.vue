@@ -1,9 +1,10 @@
 <script setup lang="ts">
 
-  import { reactive, onBeforeMount } from 'vue';
+  import { reactive, onBeforeMount, type Reactive } from 'vue';
   import { useRoute } from 'vue-router';
 
   import DefaultTemplate from '../templates/DefaultTemplate.vue';
+  import type IList from '@/interfaces/list.interface';
 
   const route = useRoute();
 
@@ -14,11 +15,15 @@
     }
   });
 
-  const data = reactive({
+  const data: Reactive<{ list: IList|null }> = reactive({
     list: null
   });
 
   onBeforeMount(async () => {
+
+    // @todo: redirect to another page
+    // to show that the list is missing or
+    // private
 
     try {
 
@@ -27,6 +32,9 @@
       if (request.ok) {
         const response = await request.json();
         data.list = response;
+
+        console.log(response);
+
       }
 
     } catch (error: unknown) {
@@ -42,11 +50,11 @@
     <template v-slot:main>
       
       <template v-if="data.list">
-        {{ data.list }}
-      </template>
+        
+        <header>
+          <h2>{{ data.list.title }}</h2>
+        </header>
 
-      <template v-else>
-        List is missing or private.
       </template>
 
     </template>
