@@ -1,8 +1,10 @@
 <script setup lang="ts">
 
-  import { computed } from 'vue';
+  import { computed, ref } from 'vue';
 
   import Item from './Item.vue';
+
+  import type IGroup from '@/interfaces/group.interface';
 
   const props = defineProps({
     group: {
@@ -11,27 +13,53 @@
     }
   });
 
-  const group = computed(() => props.group);
+  const open = ref(true);
+
+  const group = computed(() => props.group as IGroup);
   
 </script>
 
 <template>
 
-  <div class="group">
+  <UCollapsible v-model:open="open">
 
-    <div class="items">
+    <UButton
+      :label="group.title"
+      color="neutral"
+      variant="subtle"
+      trailing-icon="i-lucide-chevron-down"
+      block
+    />
 
-      <template v-if="group.items.length > 0" v-for="item of group.items" :key="item.id">
-        <Item :item />
-      </template>
+    <template #content>
 
-      <template v-else>
-        There are no items.
-      </template>
+      <div class="content">
 
-    </div>
+        <UCard>
 
-  </div>
+          <template #default>
+
+            <div class="items">
+
+              <template v-if="group.items.length > 0" v-for="item of group.items" :key="item.id">
+                <Item :item />
+              </template>
+
+              <template v-else>
+                There are no items.
+              </template>
+
+            </div>
+            
+          </template>
+
+        </UCard>
+
+      </div>
+  
+    </template>
+
+  </UCollapsible>
 
 </template>
 
@@ -40,13 +68,15 @@
   @reference 'tailwindcss';
 
   .group {
-    background-color: red;
     @apply p-2;
   }
 
   .items {
-    background-color: blue;
     @apply gap-4 grid grid-cols-4 p-2;
+  }
+
+  .content {
+    @apply mb-0.5 mt-2 mx-0.5;
   }
 
 </style>

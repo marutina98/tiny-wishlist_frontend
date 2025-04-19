@@ -18,12 +18,19 @@ import { url } from 'inspector';
 
 <template>
 
-  <div class="list p-4">
+  <div class="list">
 
     <UCard>
 
       <template #header>
-        Header        
+        <header class="list-header">
+          <span class="list-header-pretitle">
+            List:
+          </span>
+          <span class="list-header-title">
+            {{ list.title }}
+          </span>
+        </header>
       </template>
 
       <template #default>
@@ -42,10 +49,6 @@ import { url } from 'inspector';
 
       </template>
 
-      <template #footer>
-        Footer
-      </template>
-
     </UCard>
 
   </div>
@@ -55,10 +58,21 @@ import { url } from 'inspector';
 <style scoped>
   
   @reference 'tailwindcss';
+  
+  .list {
+    @apply p-4;
+  }
+
+  .list-header-pretitle {
+    @apply font-bold;
+  }
+
+  .list-header-title {
+    @apply underline;
+  }
 
   .groups {
-    background-color: yellow;
-    @apply gap-4 grid grid-cols-1 p-2;
+    @apply gap-8 grid grid-cols-2 p-2;
   }
 
 </style>

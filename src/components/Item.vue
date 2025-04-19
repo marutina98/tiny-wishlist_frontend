@@ -26,7 +26,6 @@
   @reference 'tailwindcss';
 
   .item {
-    background-color: green;
     @apply p-2;
   }
 
