@@ -3,7 +3,8 @@
   import { computed } from 'vue';
 
   import Group from './Group.vue';
-import { url } from 'inspector';
+
+  import type IList from '@/interfaces/list.interface';
 
   const props = defineProps({
     list: {
@@ -12,13 +13,27 @@ import { url } from 'inspector';
     }
   });
 
-  const list = computed(() => props.list);
+  const list = computed(() => props.list as IList);
   
 </script>
 
 <template>
 
   <div class="list">
+
+    <!-- Show a thumbnail if present -->
+
+    <template v-if="list.thumbnail.length > 0">
+    
+      <UCard>
+        <template #default>
+          <div class="list-thumbnail" :style="{
+            backgroundImage: 'url(' + list.thumbnail + ')'
+          }"></div>
+        </template>
+      </UCard>
+
+    </template>
 
     <UCard>
 
@@ -49,6 +64,10 @@ import { url } from 'inspector';
 
       </template>
 
+      <template #footer>
+        User info will be go here.
+      </template>
+
     </UCard>
 
   </div>
@@ -58,9 +77,16 @@ import { url } from 'inspector';
 <style scoped>
   
   @reference 'tailwindcss';
+
+  .list-thumbnail {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    @apply h-64;
+  }
   
   .list {
-    @apply p-4;
+    @apply p-4 flex flex-col gap-4;
   }
 
   .list-header-pretitle {

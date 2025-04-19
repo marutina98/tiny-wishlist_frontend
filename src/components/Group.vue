@@ -24,7 +24,7 @@
   <UCollapsible v-model:open="open">
 
     <UButton
-      :label="group.title"
+      :label="'Group: ' + group.title"
       color="neutral"
       variant="subtle"
       trailing-icon="i-lucide-chevron-down"
