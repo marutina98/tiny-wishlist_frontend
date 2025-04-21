@@ -3,6 +3,7 @@
   import { computed } from 'vue';
 
   import Group from './Group.vue';
+  import Priority from './Priority.vue';
 
   import type IList from '@/interfaces/list.interface';
 
@@ -14,6 +15,7 @@
   });
 
   const list = computed(() => props.list as IList);
+  const priorityId = computed(() => props.list.priorityId as Number);
   
 </script>
 
@@ -41,6 +43,7 @@
 
       <template #header>
         <header class="list-header">
+          <Priority :priorityId />
           <span class="list-header-pretitle">
             List:
           </span>
