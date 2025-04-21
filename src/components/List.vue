@@ -15,7 +15,7 @@
   });
 
   const list = computed(() => props.list as IList);
-  const priorityId = computed(() => props.list.priorityId as Number);
+  const priorityId = computed(() => props.list.priorityId as number);
   
 </script>
 
