@@ -69,14 +69,9 @@
       <!-- Show user info -->
 
       <template #footer>
-
-        {{ list.user }}
-
         <div class="user">
-          <div class="user-name">
-            <span>Author</span>
-            <span>{{ list.user.username }}</span>
-          </div>
+          <span class="user-author">Author:</span>
+          <span class="user-username">{{ list.user.username }}</span>
         </div>
       </template>
 
@@ -111,6 +106,14 @@
 
   .groups {
     @apply gap-8 flex flex-col p-2;
+  }
+
+  .user {
+    @apply gap-1 flex content-center justify-center;
+  }
+
+  .user-author {
+    @apply underline;
   }
 
 </style>
