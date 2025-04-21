@@ -72,10 +72,12 @@
       <!-- Show user info -->
 
       <template #footer>
-        <div class="user">
-          <span class="user-author">Author:</span>
-          <span class="user-username">{{ list.user.username }}</span>
-        </div>
+        <footer>
+          <div class="user">
+            <span class="user-author">Author:</span>
+            <span class="user-username">{{ list.user.username }}</span>
+          </div>
+        </footer>
       </template>
 
     </UCard>
@@ -87,6 +89,11 @@
 <style scoped>
   
   @reference 'tailwindcss';
+
+  header,
+  footer {
+    @apply text-sm;
+  }
 
   .list-thumbnail {
     background-position: center center;
