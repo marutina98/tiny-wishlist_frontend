@@ -26,7 +26,7 @@
   @reference 'tailwindcss';
 
   .item {
-    @apply p-2;
+    @apply border border-stone-200 p-2 rounded-md aspect-square;
   }
 
 </style>
