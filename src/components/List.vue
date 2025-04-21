@@ -22,7 +22,7 @@
   <div class="list">
 
     <!-- Show a thumbnail if present -->
-
+  
     <template v-if="list.thumbnail.length > 0">
     
       <UCard>
@@ -34,6 +34,8 @@
       </UCard>
 
     </template>
+
+    <!-- Show list -->
 
     <UCard>
 
@@ -64,8 +66,18 @@
 
       </template>
 
+      <!-- Show user info -->
+
       <template #footer>
-        User info will be go here.
+
+        {{ list.user }}
+
+        <div class="user">
+          <div class="user-name">
+            <span>Author</span>
+            <span>{{ list.user.username }}</span>
+          </div>
+        </div>
       </template>
 
     </UCard>
