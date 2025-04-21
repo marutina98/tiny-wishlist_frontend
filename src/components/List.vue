@@ -95,6 +95,10 @@
     @apply text-sm;
   }
 
+  .list {
+    @apply max-w-7xl mx-auto;
+  }
+
   .list-thumbnail {
     background-position: center center;
     background-repeat: no-repeat;
