@@ -33,6 +33,9 @@
         <div class="item-title">{{ item.title }}</div>
       </div>
       <div class="item-content-bottom">
+        <div class="item-quantity">
+          {{ item.quantity }}
+        </div>
         <div class="item-price">
           {{ item.price }}
         </div>
@@ -64,7 +67,13 @@
     width: var(--side);
   }
 
+  .item-content-top,
+  .item-content-bottom {
+    @apply flex justify-between;
+  }
+
   .item-title,
+  .item-quantity,
   .item-price {
     @apply text-xs bg-white p-2;
   }
@@ -72,6 +81,15 @@
   .item-title::before {
     @apply underline uppercase mr-1;
     content: 'Title';
+  }
+
+  .item-quantity {
+    @apply font-bold;
+  }
+
+  .item-quantity::before {
+    @apply underline uppercase mr-1 font-normal;
+    content: 'Quantity';
   }
 
   .item-price {
