@@ -45,6 +45,8 @@
                 <Item :item />
               </template>
 
+              <!-- @todo: show message when no items are present -->
+
               <template v-else>
                 There are no items.
               </template>
