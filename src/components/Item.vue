@@ -31,6 +31,7 @@
     <div class="item-content">
       <div class="item-content-top">
         <div class="item-title">{{ item.title }}</div>
+        <div class="item-description">{{ item.description }}</div>
       </div>
       <div class="item-content-bottom">
         <div class="item-quantity">
@@ -69,10 +70,19 @@
 
   .item-content-top,
   .item-content-bottom {
-    @apply flex justify-between;
+    @apply flex;
+  }
+
+  .item-content-top {
+    @apply flex-col gap-2;
+  }
+
+  .item-content-bottom {
+    @apply justify-between;
   }
 
   .item-title,
+  .item-description,
   .item-quantity,
   .item-price {
     @apply text-xs bg-white p-2;
@@ -81,6 +91,11 @@
   .item-title::before {
     @apply underline uppercase mr-1;
     content: 'Title';
+  }
+
+  .item-description::before {
+    @apply underline uppercase mr-1;
+    content: 'Description';
   }
 
   .item-quantity {
