@@ -11,6 +11,7 @@
     {
       label: 'Profile',
       defaultOpen: true,
+      icon: 'i-system-uicons:user-male',
       children: [
         {
           label: 'View',
@@ -23,6 +24,7 @@
     {
       label: 'Wishlists',
       defaultOpen: true,
+      icon: 'i-system-uicons:gift',
       children: [
         {
           label: 'View',
@@ -45,7 +47,15 @@
 <template>
   <DefaultTemplate>
     <template v-slot:main>
-      <UNavigationMenu v-bind="nav" />
+      <div class="wrapper">
+        <UNavigationMenu v-bind="nav" />
+        <div class="right content">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+          Unde voluptates nam totam soluta, nesciunt sed illum voluptas
+          quae quidem nihil ut, sapiente ab. Dolor ad amet optio rerum,
+          cumque aperiam.
+        </div>
+      </div>
     </template>
   </DefaultTemplate>
 </template>
@@ -53,6 +63,10 @@
 <style scoped>
 
   @reference 'tailwindcss';
+
+  .wrapper {
+    @apply flex gap-2 p-2;
+  }
 
   .left.navigation-menu {
     @apply w-48;
