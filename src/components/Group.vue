@@ -55,7 +55,7 @@
               <Item v-for="item of group.items" :item :key="item.id "/>
             </div>
             <div v-else class="items no-items">
-              There are no items in this group.
+              There are no items present in this group.
             </div>
           </template>
 

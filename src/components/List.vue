@@ -54,17 +54,13 @@
       </template>
 
       <template #default>
-        
-        <div class="groups">
 
-          <template v-if="list.groups.length > 0" v-for="group of list.groups" :key="group.id">
-            <Group :group />
-          </template>
+        <div v-if="list.groups.length > 0" class="groups">
+          <Group v-for="group of list.groups" :group :key="group.id" />
+        </div>
 
-          <template v-else>
-            There are no groups.
-          </template>
-
+        <div v-else class="groups no-groups">
+          There are no groups present in this list.
         </div>
 
       </template>
@@ -118,8 +114,12 @@
     @apply underline;
   }
 
-  .groups {
+  .groups:not(.no-groups) {
     @apply gap-8 flex flex-col p-2;
+  }
+
+  .groups.no-groups {
+    @apply text-center text-sm;
   }
 
   .user {
