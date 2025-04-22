@@ -15,6 +15,9 @@
 
   const open = ref(true);
 
+  // Get group and change open.value based
+  // on its archived status
+
   const group = computed(() => {
     const group = props.group as IGroup;
     open.value = !group.archived;
