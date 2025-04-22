@@ -51,21 +51,12 @@
         <UCard>
 
           <template #default>
-
-            <div class="items">
-
-              <template v-if="group.items.length > 0" v-for="item of group.items" :key="item.id">
-                <Item :item />
-              </template>
-
-              <!-- @todo: show message when no items are present -->
-
-              <template v-else>
-                There are no items.
-              </template>
-
+            <div v-if="group.items.length > 0" class="items">
+              <Item v-for="item of group.items" :item :key="item.id "/>
             </div>
-            
+            <div v-else class="items no-items">
+              There are no items in this group.
+            </div>
           </template>
 
         </UCard>
@@ -82,12 +73,12 @@
 
   @reference 'tailwindcss';
 
-  .group {
-    @apply p-2;
+  .items:not(.no-items) {
+    @apply gap-4 grid grid-cols-3 p-2;
   }
 
-  .items {
-    @apply gap-4 grid grid-cols-3 p-2;
+  .items.no-items {
+    @apply text-center text-sm;
   }
 
   .content {
