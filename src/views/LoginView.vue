@@ -46,7 +46,7 @@
     // create token cookie
 
     const data = toRaw(state);
-    const request = await auth.register(data);
+    const request = await auth.login(data);
 
     if (request.ok) {
 
@@ -68,7 +68,7 @@
     } else {
       toast.add({
         title: 'Error!',
-        description: 'Could not create an account, please try again.',
+        description: 'Could not login, please try again.',
         color: 'error',
       });
     }
