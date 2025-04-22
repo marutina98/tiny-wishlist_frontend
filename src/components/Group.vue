@@ -15,7 +15,16 @@
 
   const open = ref(true);
 
-  const group = computed(() => props.group as IGroup);
+  const group = computed(() => {
+    const group = props.group as IGroup;
+    open.value = !group.archived;
+    return group;
+  });
+
+  const label = computed(() => {
+    const group = props.group as IGroup;
+    return props.group.archived ? `ARCHIVED: ${group.title}` : group.title;
+  });
   
 </script>
 
@@ -24,11 +33,12 @@
   <UCollapsible v-model:open="open">
 
     <UButton
-      :label="'Group: ' + group.title"
+      :label
       color="neutral"
       variant="subtle"
       trailing-icon="i-lucide-chevron-down"
       block
+      :disabled="group.archived"
     />
 
     <template #content>
