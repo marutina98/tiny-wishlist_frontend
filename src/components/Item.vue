@@ -13,12 +13,11 @@
   });
 
   const item = computed(() => props.item as IItem);
-  const cssVariables = computed(() => {
-    const item = props.item as IItem;
+  const css = computed(() => {
     const thumbnail = props.item.thumbnail ?? SHelpers.getPlaceholderImage();
     return {
-      '--background-image': `url(${thumbnail})`,
-    }
+      '--background-image': `url(${thumbnail})`
+    };
   });
   
 </script>
@@ -27,7 +26,7 @@
 
   <!-- Add Background Image in variable (thumbnail or placeholder) -->
 
-  <div class="item" :style="cssVariables">
+  <div class="item" :class="{ 'item-reserved': item.reserved }" :style="css">
     <div class="item-content">
       <div class="item-content-top">
         <div class="item-title">{{ item.title }}</div>
@@ -48,10 +47,30 @@
 
 <style scoped>
 
+  /* @todo: add different appearance for reserved item */
+
   @reference 'tailwindcss';
 
   .item {
     @apply border border-stone-200 p-2 rounded-md aspect-square relative;
+  }
+
+  .item-reserved::after {
+    @apply opacity-25 bg-stone-500 h-full w-full absolute rounded-md;
+    content: '';
+    left: 0;
+    top: 0;
+    z-index: 1;
+  }
+
+  .item-reserved::before {
+    @apply text-2xl bg-white p-2 uppercase;
+    content: 'Reserved';
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
   }
 
   .item-content {
