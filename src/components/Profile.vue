@@ -1,8 +1,12 @@
 <script setup lang="ts">
 
-  import { computed, onBeforeMount, reactive } from 'vue';
+  import { computed, onBeforeMount, reactive, inject, toRaw } from 'vue';
 
   import * as v from 'valibot';
+
+  import SApi from '@/services/api.service';
+
+  import type IAuth from '@/interfaces/auth.interface';
 
   const props = defineProps({
     user: {
@@ -12,6 +16,9 @@
   });
 
   const user = computed(() => props.user);
+
+  const auth = inject('auth') as IAuth;
+  const toast = useToast();
 
   // Edit Profile Form
 
@@ -49,8 +56,40 @@
 
   // onSubmit Edit Profile
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     
+    // login and move to homepage
+    // create token cookie
+
+    const data = toRaw(state);
+    const oldToken = auth.getToken();
+
+    const request = await SApi.updateUser(data, oldToken);
+
+    if (request.ok) {
+
+      const response = await request.json();
+      const newToken = response.token;
+
+      // Replace old token with newly
+      // received token
+      
+      auth.addToken(newToken);
+
+      toast.add({
+        title: 'Success!',
+        description: 'You have succesfully updated your profile.',
+        color: 'success',
+      });
+
+    } else {
+      toast.add({
+        title: 'Error!',
+        description: 'Could not update your profile, please try again.',
+        color: 'error',
+      });
+    }
+
   }
 
   // Set default state onBeforeMount

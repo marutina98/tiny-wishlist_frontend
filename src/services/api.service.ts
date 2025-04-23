@@ -1,6 +1,7 @@
 import type IRequestLogin from '@/interfaces/request-login.interface';
 import type IRequestConfig from '@/interfaces/request-config.interface';
 import type IRequestRegister from '@/interfaces/request-register.interface';
+import type IRequestUpdateUser from '@/interfaces/request-update-user.interface';
 
 class SApi {
 
@@ -34,6 +35,14 @@ class SApi {
     return await this.getRequest({
       apiURL: `${this.baseURL}/user/auth`,
       method: 'GET',
+      token: token,
+    });
+  }
+
+  public async updateUser(data: IRequestUpdateUser, token: string) {
+    return await this.getRequest({
+      apiURL: `${this.baseURL}/user`,
+      method: 'PUT',
       token: token,
     });
   }
