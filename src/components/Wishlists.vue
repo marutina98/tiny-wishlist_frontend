@@ -80,14 +80,17 @@
           {
             label: 'Private Wishlists',
             children: privateLists,
+            defaultExpanded: true,
           },
           {
             label: 'Public Wishlists',
             children: publicLists,
+            defaultExpanded: true,
           },
           {
             label: 'Archived Wishlists',
             children: archivedLists,
+            defaultExpanded: true,
           }
         ]
       }
