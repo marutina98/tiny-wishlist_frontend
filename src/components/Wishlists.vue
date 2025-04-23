@@ -120,8 +120,12 @@
     @apply flex flex-row gap-2;
   }
 
-  .content {
+  .tree {
     @apply w-1/3;
+  }
+
+  .content {
+    @apply w-2/3;
   }
 
 </style>
