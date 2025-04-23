@@ -1,6 +1,8 @@
 <script setup lang="ts">
 
-  import { computed } from 'vue';
+  import { computed, onBeforeMount, reactive } from 'vue';
+
+  import * as v from 'valibot';
 
   const props = defineProps({
     user: {
@@ -10,6 +12,53 @@
   });
 
   const user = computed(() => props.user);
+
+  // Edit Profile Form
+
+  const passwordRegexErrorText = 'Your password must contain at least a lowercase character,' +
+                                 'an uppercase character, a number and a special character.';
+
+  const schema = v.object({
+
+    email: v.pipe(
+      v.string(),
+      v.email('Insert a valid email.'),
+    ),
+
+    username: v.pipe(
+      v.string(),
+      v.nonEmpty('Please enter your username.'),
+      v.regex(/^[A-Za-z0-9]*$/, 'Your username can only contain letters and numbers.'),
+      v.minLength(8, 'Your username must have 8 characters or more.'),
+    ),
+
+    password: v.pipe(
+      v.string(),
+      v.nonEmpty('Please enter your password.'),
+      v.regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).*$/, passwordRegexErrorText),
+      v.minLength(8, 'Your password must have 8 characters or more.'),
+    )
+
+  });
+
+  const state = reactive({
+    email: '',
+    username: '',
+    password: '',
+  });
+
+  // onSubmit Edit Profile
+
+  const onSubmit = () => {
+    
+  }
+
+  // Set default state onBeforeMount
+
+  onBeforeMount(() => {
+    state.email = user.value.email;
+    state.username = user.value.username;
+  });
 
 </script>
 
@@ -32,10 +81,26 @@
         <UButton class="cursor-pointer" label="Edit Profile" />
         <template #content>
           <div class="profile-edit">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Voluptate inventore officiis mollitia necessitatibus asperiores
-            id amet esse laboriosam eos illo ut voluptatum tenetur ipsam
-            temporibus rem distinctio, in molestiae. Nulla?
+            <UForm class="profile-form" :schema :state @submit.prevent="onSubmit">
+
+              <UFormField label="Email" name="email">
+                <UInput v-model="state.email" />
+              </UFormField>
+
+              <UFormField label="Username" name="username">
+                <UInput v-model="state.username" />
+              </UFormField>
+
+              <UFormField label="Password" name="password">
+                <UInput v-model="state.password" type="password" />
+              </UFormField>
+
+              <div class="profile-btn-wrapper">
+                <UButton type="submit">
+                  Submit
+                </UButton>
+              </div>
+            </UForm>
           </div>
         </template>
       </UModal>
@@ -73,7 +138,15 @@
   }
 
   .profile-edit {
-    @apply p-2;
+    @apply p-4 flex justify-center;
+  }
+
+  .profile-form {
+    @apply flex flex-col gap-4;
+  }
+
+  .profile-btn-wrapper {
+    @apply flex justify-center;
   }
 
 </style>
