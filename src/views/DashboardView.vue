@@ -11,7 +11,15 @@
   import type { TabsItem } from '@nuxt/ui';
 
   const active = ref(0);
-  const components = [Profile, Wishlists];
+
+  const components = [
+    {
+      component: Profile,
+    },
+    {
+      component: Wishlists,
+    }
+  ];
 
   const items: Ref<TabsItem[]> = ref([
     {
@@ -35,7 +43,7 @@
         <div class="content">
           <UCard>
             <template #default>
-              <component :is="components[active]"></component>
+              <component :is="components[active].component"></component>
             </template>
           </UCard>
         </div>
