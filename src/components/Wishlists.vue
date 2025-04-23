@@ -62,10 +62,12 @@
       {
         label: 'Public Lists',
         children: archivedPublicLists,
+        defaultExpanded: true,
       },
       {
         label: 'Private Lists',
         children: archivedPrivateLists,
+        defaultExpanded: true,
       }
     ];
 
