@@ -12,7 +12,7 @@
   import type { Ref } from 'vue';
   import type { TabsItem } from '@nuxt/ui';
   import type IUser from '@/interfaces/user.interface';
-import type IAuth from '@/interfaces/auth.interface';
+  import type IAuth from '@/interfaces/auth.interface';
 
   const user: Ref<IUser|null> = ref(null);
   const activeComponentIndex = ref('0');
@@ -60,7 +60,7 @@ import type IAuth from '@/interfaces/auth.interface';
         <div class="content">
           <UCard>
             <template #default>
-              <component :user :is="components[parseInt(activeComponentIndex)]"></component>
+              <component v-if="user" :user :is="components[parseInt(activeComponentIndex)]"></component>
             </template>
           </UCard>
         </div>
