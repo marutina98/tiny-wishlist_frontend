@@ -1,46 +1,26 @@
 <script setup lang="ts">
 
-  import DefaultTemplate from '../templates/DefaultTemplate.vue';
-
   import { ref } from 'vue';
 
-  import type { Ref } from 'vue';
-  import type { NavigationMenuItem } from '@nuxt/ui';
+  import DefaultTemplate from '../templates/DefaultTemplate.vue';
 
-  const items: Ref<NavigationMenuItem[]> = ref([
+  import Profile from '@/components/Profile.vue';
+  import Wishlists from '@/components/Wishlists.vue';
+
+  import type { Ref } from 'vue';
+  import type { TabsItem } from '@nuxt/ui';
+
+  const active = ref(0);
+  const components = [Profile, Wishlists];
+
+  const items: Ref<TabsItem[]> = ref([
     {
-      label: 'Profile',
-      defaultOpen: true,
-      icon: 'i-system-uicons:user-male',
-      children: [
-        {
-          label: 'View',
-        },
-        {
-          label: 'Edit',
-        }
-      ]
+      label: 'Profile'
     },
     {
-      label: 'Wishlists',
-      defaultOpen: true,
-      icon: 'i-system-uicons:gift',
-      children: [
-        {
-          label: 'View',
-        },
-        {
-          label: 'Create',
-        }
-      ]
+      label: 'Wishlists'
     }
   ]);
-
-  const nav = {
-    class: 'left navigation-menu',
-    orientation: 'vertical' as 'vertical' | 'horizontal',
-    items: items.value,
-  }
 
 </script>
 
@@ -48,12 +28,12 @@
   <DefaultTemplate>
     <template v-slot:main>
       <div class="wrapper">
-        <UNavigationMenu v-bind="nav" />
-        <div class="right content">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-          Unde voluptates nam totam soluta, nesciunt sed illum voluptas
-          quae quidem nihil ut, sapiente ab. Dolor ad amet optio rerum,
-          cumque aperiam.
+        <div class="tabs">
+          <UTabs v-model="active" :content="false" :items />
+        </div>
+
+        <div class="content">
+          <component :is="components[active]"></component>
         </div>
       </div>
     </template>
@@ -61,15 +41,5 @@
 </template>
 
 <style scoped>
-
   @reference 'tailwindcss';
-
-  .wrapper {
-    @apply flex gap-2 p-2;
-  }
-
-  .left.navigation-menu {
-    @apply w-48;
-  }
-
 </style>
