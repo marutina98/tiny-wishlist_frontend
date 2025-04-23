@@ -1,9 +1,11 @@
 <script setup lang="ts">
 
-  import { computed, onBeforeMount, ref, type Ref } from 'vue';
+  import { computed, onBeforeMount, ref } from 'vue';
 
+  import type { Ref } from 'vue';
   import type { TreeItem } from '@nuxt/ui';
   import type IUser from '@/interfaces/user.interface';
+  import type IList from '@/interfaces/list.interface';
 
   const props = defineProps({
     user: {
@@ -13,6 +15,14 @@
   });
 
   const lists = computed(() => (props.user as IUser).lists);
+
+  // Change Active List on Select
+
+  const activeList: Ref<IList|null> = ref(null);
+
+  const onSelectList = (list: IList) => {
+    activeList.value = list;
+  }
 
   // Lists as File Tree
 
@@ -33,7 +43,8 @@
       for (let list of lists.value) {
 
         const listObj = {
-          label: list.title
+          label: list.title,
+          onSelect: () => onSelectList(list)
         }
 
         if (list.private) {
@@ -111,7 +122,7 @@
       <UTree :items />
     </div>
     <div class="content">
-      Content
+      {{ activeList }}
     </div>
   </div>
   
