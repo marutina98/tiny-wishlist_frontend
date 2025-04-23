@@ -33,7 +33,9 @@
         </div>
 
         <div class="content">
-          <component :is="components[active]"></component>
+          <UCard>
+            <component :is="components[active]"></component>
+          </UCard>
         </div>
       </div>
     </template>
@@ -41,5 +43,11 @@
 </template>
 
 <style scoped>
+
   @reference 'tailwindcss';
+
+  .wrapper {
+    @apply flex flex-col gap-2 p-2;
+  }
+
 </style>
