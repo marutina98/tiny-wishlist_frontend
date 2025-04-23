@@ -7,7 +7,7 @@
   import type IUser from '@/interfaces/user.interface';
   import type IList from '@/interfaces/list.interface';
 
-  import WishlistsList from './WishlistsList.vue';
+  import WishlistList from './WishlistList.vue';
 
   const props = defineProps({
     user: {
@@ -124,7 +124,7 @@
       <UTree :items />
     </div>
     <div class="content">
-      <WishlistsList v-if="activeList" :list="activeList" />
+      <WishlistList v-if="activeList" :list="activeList" />
     </div>
   </div>
   
