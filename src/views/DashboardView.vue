@@ -34,7 +34,9 @@
 
         <div class="content">
           <UCard>
-            <component :is="components[active]"></component>
+            <template #default>
+              <component :is="components[active]"></component>
+            </template>
           </UCard>
         </div>
       </div>
