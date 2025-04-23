@@ -1,11 +1,13 @@
 <script setup lang="ts">
 
-  import { computed, onBeforeMount, reactive, inject, toRaw } from 'vue';
+  import { computed, onBeforeMount, reactive, inject, toRaw, ref } from 'vue';
 
   import * as v from 'valibot';
 
   import SApi from '@/services/api.service';
 
+  import type { Ref } from 'vue';
+  import type IUser from '@/interfaces/user.interface';
   import type IAuth from '@/interfaces/auth.interface';
 
   const props = defineProps({
@@ -15,7 +17,11 @@
     }
   });
 
-  const user = computed(() => props.user);
+  // Modal open status
+
+  const open = ref(false);
+
+  const user: Ref<IUser|null> = ref(null);
 
   const auth = inject('auth') as IAuth;
   const toast = useToast();
@@ -71,10 +77,18 @@
       const response = await request.json();
       const newToken = response.token;
 
+      // Update oldUser with new received data
+
+      user.value = response;
+
       // Replace old token with newly
       // received token
       
       auth.addToken(newToken);
+
+      // Close Modal
+
+      open.value = false;
 
       toast.add({
         title: 'Success!',
@@ -92,11 +106,18 @@
 
   }
 
+  // Set user from props
   // Set default state onBeforeMount
 
   onBeforeMount(() => {
-    state.email = user.value.email;
-    state.username = user.value.username;
+    
+    user.value = props.user as IUser;
+
+    if (user.value) {
+      state.email = user.value.email;
+      state.username = user.value.username;
+    }
+    
   });
 
 </script>
@@ -107,16 +128,16 @@
 
     <div class="profile-element">
       <span class="profile-label">Email</span>
-      <span class="profile-content">{{ user.email }}</span>
+      <span v-if="user" class="profile-content">{{ user.email }}</span>
     </div>
 
     <div class="profile-element">
       <span class="profile-label">Username</span>
-      <span class="profile-content">{{ user.username }}</span>
+      <span v-if="user" class="profile-content">{{ user.username }}</span>
     </div>
 
     <div class="profile-button">
-      <UModal title="Edit Profile" description="Modal that shows a form to Edit the Profile of the Authenticated User">
+      <UModal v-model:open="open" title="Edit Profile" description="Modal that shows a form to Edit the Profile of the Authenticated User">
         <UButton class="cursor-pointer" label="Edit Profile" />
         <template #content>
           <div class="profile-edit">

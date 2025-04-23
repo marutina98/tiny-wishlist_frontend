@@ -39,10 +39,11 @@ class SApi {
     });
   }
 
-  public async updateUser(data: IRequestUpdateUser, token: string) {
+  public async updateUser(body: IRequestUpdateUser, token: string) {
     return await this.getRequest({
       apiURL: `${this.baseURL}/user`,
       method: 'PUT',
+      body: JSON.stringify(body),
       token: token,
     });
   }
