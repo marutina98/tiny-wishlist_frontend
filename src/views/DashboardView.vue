@@ -15,7 +15,7 @@
 import type IAuth from '@/interfaces/auth.interface';
 
   const user: Ref<IUser|null> = ref(null);
-  const activeComponentIndex = ref(0);
+  const activeComponentIndex = ref('0');
 
   const components = [
     Profile,
@@ -60,7 +60,7 @@ import type IAuth from '@/interfaces/auth.interface';
         <div class="content">
           <UCard>
             <template #default>
-              <component :user :is="components[activeComponentIndex]"></component>
+              <component :user :is="components[parseInt(activeComponentIndex)]"></component>
             </template>
           </UCard>
         </div>
