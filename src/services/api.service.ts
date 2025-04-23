@@ -30,6 +30,14 @@ class SApi {
     });
   }
 
+  public async getAuthenticatedUser(token: string) {
+    return await this.getRequest({
+      apiURL: `${this.baseURL}/user/auth`,
+      method: 'GET',
+      token: token,
+    });
+  }
+
   public getRequest(requestConfig: IRequestConfig) {
 
     const settings: RequestInit = {

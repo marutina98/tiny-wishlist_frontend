@@ -1,6 +1,8 @@
 <script setup lang="ts">
 
-  import { ref } from 'vue';
+  import { ref, onBeforeMount, inject } from 'vue';
+
+  import SApi from '@/services/api.service';
 
   import DefaultTemplate from '../templates/DefaultTemplate.vue';
 
@@ -9,16 +11,15 @@
 
   import type { Ref } from 'vue';
   import type { TabsItem } from '@nuxt/ui';
+  import type IUser from '@/interfaces/user.interface';
+import type IAuth from '@/interfaces/auth.interface';
 
-  const active = ref(0);
+  const user: Ref<IUser|null> = ref(null);
+  const activeComponentIndex = ref(0);
 
   const components = [
-    {
-      component: Profile,
-    },
-    {
-      component: Wishlists,
-    }
+    Profile,
+    Wishlists,
   ];
 
   const items: Ref<TabsItem[]> = ref([
@@ -29,6 +30,22 @@
       label: 'Wishlists'
     }
   ]);
+  
+  // Get authenticated user
+  // put it into user
+
+  onBeforeMount(async () => {
+
+    const auth = inject('auth') as IAuth;
+    const token = auth.getToken();
+    const request = await SApi.getAuthenticatedUser(token);
+    
+    if (request.ok) {
+      const response = await request.json();
+      user.value = response;
+    }
+
+  });
 
 </script>
 
@@ -37,13 +54,13 @@
     <template v-slot:main>
       <div class="wrapper">
         <div class="tabs">
-          <UTabs v-model="active" :content="false" :items />
+          <UTabs v-model="activeComponentIndex" :content="false" :items />
         </div>
 
         <div class="content">
           <UCard>
             <template #default>
-              <component :is="components[active].component"></component>
+              <component :user :is="components[activeComponentIndex]"></component>
             </template>
           </UCard>
         </div>
