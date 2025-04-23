@@ -1,7 +1,8 @@
 <script setup lang="ts">
 
+  import { computed, onBeforeMount, ref } from 'vue';
+
   import type IUser from '@/interfaces/user.interface';
-  import { computed } from 'vue';
 
   const props = defineProps({
     user: {
@@ -11,6 +12,16 @@
   });
 
   const lists = computed(() => (props.user as IUser).lists);
+
+  // Lists as File Tree
+
+  const items = ref([]);
+
+  onBeforeMount(() => {
+
+    // Set items
+
+  });
 
 </script>
 
