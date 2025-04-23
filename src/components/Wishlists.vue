@@ -75,7 +75,7 @@
       {
         label: 'Wishlists',
         icon: 'i-system-uicons:gift',
-        defaultExpandend: true,
+        defaultExpanded: true,
         children: [
           {
             label: 'Private Wishlists',
