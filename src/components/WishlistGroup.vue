@@ -50,7 +50,16 @@
 
     <UCollapsible v-model:open="open">
       <template #content>
-        {{ group }}
+        <template v-if="group.items.length > 0">
+          <div class="items">
+            <WishlistItem :item v-for="item of group.items" :key="item.id" />
+          </div>
+        </template>
+        <template v-else>
+          <div class="items no-items">
+            There are no items present in this group.
+          </div>
+        </template>
       </template>
     </UCollapsible>
 
