@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
   import type IGroup from '@/interfaces/group.interface';
-  import { computed } from 'vue';
+  import { computed, ref } from 'vue';
 
   const props = defineProps({
     group: {
@@ -10,38 +10,52 @@
     }
   });
 
+  const open = ref(false);
   const group = computed(() => props.group as IGroup);
+  
+  const toggleCollapsible = () => {
+    open.value = !open.value;
+  }
+
+  const changeStatus = (id: string) => {
+    console.log('change status');
+  }
+
+  const deleteItem = (id: string) => {
+    console.log('delete item');
+  }
 
 </script>
 
 <template>
+  
   <div class="group">
-    <UCollapsible>
-      <div class="group-buttons">
-        <UButton
-          :label="group.title"
-          color="neutral"
-          variant="subtle"
-          trailing-icon="i-lucide-chevron-down"
-          block
-        />
 
-        <template v-if="group.archived">
-          <UButton label="Make Group Active" />
-        </template>
+    <div class="group-buttons">
 
-        <template v-else>
-          <UButton label="Archive Group" />
-        </template>
+      <UButton
+        :label="group.title"
+        color="neutral"
+        variant="subtle"
+        trailing-icon="i-lucide-chevron-down"
+        block @click="toggleCollapsible"
+      />
 
-        <UButton label="Delete" />
-      </div>
+      <UButton @click="changeStatus(group.id)"
+               :label="group.archived ? 'Make Group Active' : 'Archive Group'" />
 
+      <UButton @click="deleteItem(group.id)" label="Delete" />
+
+    </div>
+
+    <UCollapsible v-model:open="open">
       <template #content>
         {{ group }}
       </template>
     </UCollapsible>
+
   </div>
+
 </template>
 
 <style scoped>
@@ -49,7 +63,7 @@
   @reference 'tailwindcss';
 
   .group-buttons {
-    @apply flex gap-2;
+    @apply flex flex-row gap-2;
   }
-  
+
 </style>
