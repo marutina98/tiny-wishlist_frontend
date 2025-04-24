@@ -62,26 +62,18 @@ import { computed } from 'vue';
 
       <template v-if="list.groups.length > 0">
         <div class="groups-active">
-
           <div class="groups-active-header">
             <h2>Active Groups</h2>
           </div>
-
           <WishlistGroup :group v-for="group of filterGroups(list.groups).active" :key="group.id" />
-
-          <!-- <div v-for="group of filterGroups(list.groups).active" class="group" :key="group.id">
-            
-          </div> -->
         </div>
         
         <USeparator />
 
         <div class="groups-archived">
-
           <div class="groups-archived-header">
             <h2>Archived Groups</h2>
           </div>
-
           <WishlistGroup :group v-for="group of filterGroups(list.groups).archived" :key="group.id" />
         </div>
       </template>
