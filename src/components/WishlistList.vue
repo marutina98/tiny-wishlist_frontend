@@ -11,6 +11,9 @@ import { computed } from 'vue';
   });
 
   const list = computed(() => props.list);
+  const filteredGroups = computed(() => filterGroups(props.list.groups));
+  const archivedGroups = computed(() => filteredGroups.value.archived);
+  const activeGroups = computed(() => filteredGroups.value.active);
 
   // Filter Groups by their archival status
   
@@ -67,7 +70,12 @@ import { computed } from 'vue';
           <div class="groups-active-header">
             <h2>Active Groups</h2>
           </div>
-          <WishlistGroup :group v-for="group of filterGroups(list.groups).active" :key="group.id" />
+          <WishlistGroup v-if="activeGroups.length > 0" :group v-for="group of activeGroups" :key="group.id" />
+            <template v-else>
+              <div class="groups no-groups">
+                There are no active groups available.
+              </div>
+            </template>
         </div>
         
         <USeparator />
@@ -76,7 +84,12 @@ import { computed } from 'vue';
           <div class="groups-archived-header">
             <h2>Archived Groups</h2>
           </div>
-          <WishlistGroup :group v-for="group of filterGroups(list.groups).archived" :key="group.id" />
+          <WishlistGroup v-if="archivedGroups.length > 0" :group v-for="group of archivedGroups" :key="group.id" />
+          <template v-else>
+            <div class="groups no-groups">
+              There are no archived groups available.
+            </div>
+          </template>
         </div>
       </template>
 
