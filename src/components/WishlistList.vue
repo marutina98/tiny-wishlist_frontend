@@ -67,28 +67,11 @@ import { computed } from 'vue';
             <h2>Active Groups</h2>
           </div>
 
-          <div v-for="group of filterGroups(list.groups).active" class="group" :key="group.id">
-            <UCollapsible>
-              
-              <div class="group-buttons">
-                <UButton
-                  :label="group.title"
-                  color="neutral"
-                  variant="subtle"
-                  trailing-icon="i-lucide-chevron-down"
-                  block
-                />
+          <WishlistGroup :group v-for="group of filterGroups(list.groups).active" :key="group.id" />
 
-                <UButton label="Archive Group" />
-
-                <UButton label="Delete" />
-              </div>
-
-              <template #content>
-                {{ group }}
-              </template>
-            </UCollapsible>
-          </div>
+          <!-- <div v-for="group of filterGroups(list.groups).active" class="group" :key="group.id">
+            
+          </div> -->
         </div>
         
         <USeparator />
@@ -99,28 +82,7 @@ import { computed } from 'vue';
             <h2>Archived Groups</h2>
           </div>
 
-          <div v-for="group of filterGroups(list.groups).archived" class="group" :key="group.id">
-            <UCollapsible>
-              
-              <div class="group-buttons">
-                <UButton
-                  :label="group.title"
-                  color="neutral"
-                  variant="subtle"
-                  trailing-icon="i-lucide-chevron-down"
-                  block
-                />
-
-                <UButton label="Make Group Active" />
-
-                <UButton label="Delete" />
-              </div>
-
-              <template #content>
-                {{ group }}
-              </template>
-            </UCollapsible>
-          </div>
+          <WishlistGroup :group v-for="group of filterGroups(list.groups).archived" :key="group.id" />
         </div>
       </template>
 
@@ -156,10 +118,6 @@ import { computed } from 'vue';
 
   .groups.no-groups {
     @apply text-center text-sm p-2;
-  }
-
-  .group-buttons {
-    @apply flex gap-2;
   }
 
   .groups-active-header,
