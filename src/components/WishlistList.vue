@@ -60,6 +60,8 @@ import { computed } from 'vue';
   
     <div :class="{ groups: true, 'no-groups': list.groups.length <= 0 }">
 
+      <!-- @todo: when no public/archived groups are present, show message -->
+
       <template v-if="list.groups.length > 0">
         <div class="groups-active">
           <div class="groups-active-header">
