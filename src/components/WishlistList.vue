@@ -18,8 +18,22 @@ import { computed } from 'vue';
   <div class="list">
 
     <div class="settings">
-      <UButton icon="i-system-uicons:plus-circle" label="Create Group" />
-      <UButton icon="i-system-uicons:plus-circle" label="Add Item" />
+
+      <UModal>
+        <UButton icon="i-system-uicons:plus-circle" label="Create Group" />
+
+        <template #content>
+          <!-- @todo: create a group form -->
+        </template>
+      </UModal>
+
+      <UModal>
+        <UButton icon="i-system-uicons:plus-circle" label="Add Item" />
+
+        <template #content>
+          <!-- @todo: create a item form -->
+        </template>
+      </UModal>
     </div>
   
     <div :class="{ groups: true, 'no-groups': list.groups.length <= 0 }">
