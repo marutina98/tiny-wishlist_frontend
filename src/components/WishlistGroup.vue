@@ -75,6 +75,10 @@
     @apply flex flex-row gap-2;
   }
 
+  .items:not(.no-items) {
+    @apply gap-4 grid grid-cols-2 p-2;
+  }
+
   .items.no-items {
     @apply text-center text-sm p-2;
   }
