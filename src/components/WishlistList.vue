@@ -79,6 +79,8 @@ import { computed } from 'vue';
                   block
                 />
 
+                <UButton label="Archive Group" />
+
                 <UButton label="Delete" />
               </div>
 
@@ -108,6 +110,8 @@ import { computed } from 'vue';
                   trailing-icon="i-lucide-chevron-down"
                   block
                 />
+
+                <UButton label="Make Group Active" />
 
                 <UButton label="Delete" />
               </div>
