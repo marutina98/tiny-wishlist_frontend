@@ -39,7 +39,13 @@ import { computed } from 'vue';
     <div :class="{ groups: true, 'no-groups': list.groups.length <= 0 }">
       <template v-if="list.groups.length > 0">
         <div v-for="group of list.groups" class="group" :key="group.id">
-          {{ group }}
+          <UCollapsible>
+            <UButton :label="group.title"/>
+
+            <template #content>
+              {{ group }}
+            </template>
+          </UCollapsible>
         </div>
       </template>
 
