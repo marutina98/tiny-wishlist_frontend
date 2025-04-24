@@ -37,7 +37,15 @@ import { computed } from 'vue';
     </div>
   
     <div :class="{ groups: true, 'no-groups': list.groups.length <= 0 }">
-      There are no groups present in this list.
+      <template v-if="list.groups.length > 0">
+        <div v-for="group of list.groups" class="group" :key="group.id">
+          {{ group }}
+        </div>
+      </template>
+
+      <template v-else>
+        There are no groups present in this list.
+      </template>
     </div>
 
   </div>
@@ -52,8 +60,8 @@ import { computed } from 'vue';
     @apply flex gap-2 justify-end;
   }
 
-  .groups {
-    @apply text-center text-sm;
+  .groups.no-groups {
+    @apply text-center text-sm p-2;
   }
 
 </style>
