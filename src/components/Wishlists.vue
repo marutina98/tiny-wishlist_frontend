@@ -119,11 +119,27 @@
 
 <template>
 
-  <div class="wishlists-wrapper">
-    <div class="tree">
+  <div class="wishlist-wrapper">
+
+    <div class="wishlist-left">
+
       <UTree :items />
+
+      <!-- Create a List modal -->
+
+      <div class="wishlist-new-list">
+        <UModal>
+          <UButton icon="i-system-uicons:plus-circle" label="New List"/>
+
+          <template #content>
+            <!-- @todo: new list form -->
+          </template>
+        </UModal>
+      </div>
+
     </div>
-    <div class="content">
+
+    <div class="wishlist-right">
       <WishlistList v-if="activeList" :list="activeList" />
     </div>
   </div>
@@ -134,16 +150,20 @@
 
   @reference 'tailwindcss';
 
-  .wishlists-wrapper {
+  .wishlist-wrapper {
     @apply flex flex-row gap-2;
   }
 
-  .tree {
-    @apply w-1/3;
+  .wishlist-left {
+    @apply flex flex-col gap-2 w-1/3;
   }
 
-  .content {
+  .wishlist-right {
     @apply w-2/3;
+  }
+
+  .wishlist-new-list {
+    @apply flex items-center justify-center;
   }
 
 </style>
