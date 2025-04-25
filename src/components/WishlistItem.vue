@@ -25,7 +25,17 @@
 <template>
 
   <div class="item" :style="css">
-    <div class="item-thumbnail"></div>
+    <div class="item-info">
+      <div class="item-title">
+        {{ item.title }}
+      </div>
+      <div class="item-description">
+        {{ item.description }}
+      </div>
+    </div>
+    <div class="item-settings">
+
+    </div>
   </div>
 
 </template>
@@ -34,11 +44,28 @@
 
   @reference 'tailwindcss';
 
-  .item-thumbnail {
-    aspect-ratio: 1/1;
+  .item-info {
+    @apply flex flex-col aspect-square p-2 gap-2 justify-between;
     background-image: var(--background-image);
     background-position: center center;
     background-size: cover;
+  }
+
+  .item-title,
+  .item-description {
+    @apply bg-white p-2 text-sm truncate;
+  }
+
+  :is(.item-title, .item-description)::before {
+    @apply uppercase underline mr-0.5;
+  }
+
+  .item-title::before {
+    content: 'Title';
+  }
+
+  .item-description::before {
+    content: 'Description';
   }
 
 </style>
