@@ -26,11 +26,24 @@
 
   <div class="item" :style="css">
     <div class="item-info">
-      <div class="item-title">
-        {{ item.title }}
+      <div class="item-info-top">
+        <div class="item-title">
+          {{ item.title }}
+        </div>
+        <div class="item-description">
+          {{ item.description }}
+        </div>
       </div>
-      <div class="item-description">
-        {{ item.description }}
+      <div class="item-info-center">
+
+      </div>
+      <div class="item-info-bottom">
+        <div class="item-quantity">
+          {{ item.quantity }}
+        </div>
+        <div class="item-price">
+          {{ item.price }}
+        </div>
       </div>
     </div>
     <div class="item-settings">
@@ -51,12 +64,27 @@
     background-size: cover;
   }
 
+  .item-info-top,
+  .item-info-center {
+    @apply flex flex-col gap-2;
+  }
+
+  .item-info-bottom {
+    @apply flex flex-row justify-between;
+  }
+
   .item-title,
-  .item-description {
+  .item-description,
+  .item-quantity,
+  .item-price {
     @apply bg-white p-2 text-sm truncate;
   }
 
-  :is(.item-title, .item-description)::before {
+  :is(
+    .item-title,
+    .item-description,
+    .item-quantity
+  )::before {
     @apply uppercase underline mr-0.5;
   }
 
@@ -66,6 +94,15 @@
 
   .item-description::before {
     content: 'Description';
+  }
+
+  .item-quantity::before {
+    content: 'Quantity';
+  }
+
+  .item-price::before {
+    @apply mr-0.5;
+    content: '€';
   }
 
 </style>
