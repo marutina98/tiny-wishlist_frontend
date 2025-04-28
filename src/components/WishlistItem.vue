@@ -42,6 +42,22 @@
     groupId: '',
   });
 
+  const editSchema = v.object({
+    title: v.pipe(v.string()),
+    description: v.pipe(v.string()),
+    thumbnail: v.pipe(v.string()),
+    url: v.pipe(v.string()),
+    quantity: v.pipe(v.number()),
+    price: v.pipe(
+      v.number(),
+      v.minValue(0),
+      v.transform(value => parseFloat(value.toFixed(2)))
+    ),
+    archived: v.pipe(v.boolean()),
+    reserved: v.pipe(v.boolean()),
+    groupId: v.pipe(v.string())
+  })
+
   // Modal Status
 
   const openModalDelete = ref(false);
@@ -167,7 +183,9 @@
         <UModal v-model:open="openModalEdit">
           <UButton @click="setEditModal(item)" icon="i-system-uicons:pen" color="success" />
           <template #content>
-            Edit
+            
+
+
           </template>
         </UModal>
       </div>
