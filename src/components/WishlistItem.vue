@@ -48,7 +48,10 @@
     thumbnail: v.pipe(
       v.file()
     ),
-    url: v.pipe(v.string()),
+    url: v.pipe(
+      v.string(),
+      v.url(),
+    ),
     quantity: v.pipe(v.number()),
     price: v.pipe(
       v.number(),
@@ -214,6 +217,7 @@
           <template #content>
             <div class="modal-form-wrapper">
               <UForm class="edit-form" :schema="editSchema" :state="editState">
+
                 <UFormField label="Title" name="title">
                   <UInput v-model="editState.title" type="text"/>
                 </UFormField>
@@ -225,6 +229,22 @@
                 <UFormField label="Thumbnail" name="thumbnail">
                   <UInput @change="handleThumbnailChange" type="file" />
                 </UFormField>
+
+                <UFormField label="URL" name="url">
+                  <UInput v-model="editState.url" type="text" />
+                </UFormField>
+
+                <!--
+
+                  editState.url = item.url;
+                  editState.price = item.price;
+                  editState.quantity = item.quantity;
+                  editState.archived = item.archived;
+                  editState.reserved = item.reserved;
+                  editState.groupId = item.groupId;
+
+                -->
+
               </UForm>
             </div>
           </template>
