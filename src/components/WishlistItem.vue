@@ -33,7 +33,7 @@
   const editState = reactive({
     title: '',
     description: '',
-    thumbnail: '',
+    thumbnail: new File([], ''),
     url: '',
     quantity: 0,
     price: 0,
@@ -45,7 +45,9 @@
   const editSchema = v.object({
     title: v.pipe(v.string()),
     description: v.pipe(v.string()),
-    thumbnail: v.pipe(v.string()),
+    thumbnail: v.pipe(
+      v.file()
+    ),
     url: v.pipe(v.string()),
     quantity: v.pipe(v.number()),
     price: v.pipe(
@@ -112,9 +114,14 @@
 
   // Set editStatus
 
-  const setEditModal = (item: IItem) => {
+  // const blob = new Blob([file], { type: file.type })
 
-    editState.thumbnail = item.thumbnail;
+  const setEditModal = async (item: IItem) => {
+
+    const thumbnailBlob = await SHelpers.dataURLToBlob(item.thumbnail) as Blob;
+    const thumbnailFile = new File([thumbnailBlob], 'thumbnail');
+
+    editState.thumbnail = thumbnailFile;
     editState.title = item.title;
     editState.description = item.description;
     editState.url = item.url;
@@ -127,6 +134,28 @@
     console.log(editState);
 
   }
+
+  const handleThumbnailChange = (event: Event) => {
+
+    const target = event.target as HTMLInputElement;
+
+    if (target.files && target.files[0]) {
+      editState.thumbnail = target.files[0];
+    }
+
+    // @todo: move in submit
+
+    // const file = editState.thumbnail;
+    // const blob = new Blob([file], { type: file.type });
+
+    // console.log(SHelpers.blobToDataURL(
+    //   blob,
+    //   (data: string) => {
+    //     console.log(data)
+    //   }
+    // ))
+
+  };
   
   const editItem = () => {
 
@@ -182,9 +211,15 @@
       <div class="item-edit">
         <UModal v-model:open="openModalEdit">
           <UButton @click="setEditModal(item)" icon="i-system-uicons:pen" color="success" />
-          <template #content>
+          <template #content>      
             
+            {{ editState }}
 
+            <UForm :schema="editSchema" :state="editState">
+              <UFormField label="Thumbnail" name="thumbnail">
+                <UInput @change="handleThumbnailChange" type="file" />
+              </UFormField>
+            </UForm>
 
           </template>
         </UModal>
