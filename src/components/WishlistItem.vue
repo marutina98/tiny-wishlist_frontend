@@ -1,6 +1,8 @@
 <script setup lang="ts">
 
-  import { computed, ref, defineEmits, inject } from 'vue';
+  import * as v from 'valibot';
+
+  import { computed, ref, inject, reactive } from 'vue';
 
   import SApi from '@/services/api.service';
   import SHelpers from '@/services/helpers.service';
@@ -26,6 +28,20 @@
     };
   });
 
+  // Edit Form
+
+  const editState = reactive({
+    title: '',
+    description: '',
+    thumbnail: '',
+    url: '',
+    quantity: 0,
+    price: 0,
+    archived: false,
+    reserved: false,
+    groupId: '',
+  });
+
   // Modal Status
 
   const openModalDelete = ref(false);
@@ -33,6 +49,10 @@
 
   const toggleModalDelete = () => {
     openModalDelete.value = !openModalDelete.value;
+  }
+
+  const toggleModalEdit = () => {
+    openModalEdit.value = !openModalEdit.value;
   }
 
   // Delete Item
@@ -73,9 +93,29 @@
   }
 
   // Edit Item
+
+  // Set editStatus
+
+  const setEditModal = (item: IItem) => {
+
+    editState.thumbnail = item.thumbnail;
+    editState.title = item.title;
+    editState.description = item.description;
+    editState.url = item.url;
+    editState.price = item.price;
+    editState.quantity = item.quantity;
+    editState.archived = item.archived;
+    editState.reserved = item.reserved;
+    editState.groupId = item.groupId;
+    
+    console.log(editState);
+
+  }
   
-  const editItem = (id: string) => {
+  const editItem = () => {
+
     console.log('edit');
+
   }
 
 </script>
@@ -124,7 +164,7 @@
       </div>
       <div class="item-edit">
         <UModal v-model:open="openModalEdit">
-          <UButton icon="i-system-uicons:pen" color="success" />
+          <UButton @click="setEditModal(item)" icon="i-system-uicons:pen" color="success" />
           <template #content>
             Edit
           </template>
