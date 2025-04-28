@@ -47,7 +47,12 @@
       </div>
     </div>
     <div class="item-settings">
-
+      <div class="item-delete">
+        <UIcon class="item-settings-btn size-5" name="i-system-uicons:trash"  />
+      </div>
+      <div class="item-edit">
+        <UIcon class="item-settings-btn size-5" name="i-system-uicons:trash"  />
+      </div>
     </div>
   </div>
 
@@ -56,6 +61,10 @@
 <style scoped>
 
   @reference 'tailwindcss';
+
+  .item {
+    @apply p-4 relative;
+  }
 
   .item-info {
     @apply flex flex-col aspect-square p-2 gap-2 justify-between;
@@ -104,5 +113,24 @@
     @apply mr-0.5;
     content: '€';
   }
+
+  .item-settings {
+    height: 100%;
+    left: 0;
+    top: 0;
+    width: 100%;
+    position: absolute;
+  }
+
+  .item-settings-btn {
+    @apply rounded-full p-1 text-white w-8 h-8 text-sm cursor-pointer;
+    background-color: var(--color-red-500);
+  }
+
+  .item-settings-btn:hover,
+  .item-settings-btn:focus {
+    background-color: var(--color-red-700);
+  }
+  
 
 </style>
