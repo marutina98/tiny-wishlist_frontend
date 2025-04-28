@@ -128,7 +128,7 @@
     editState.title = item.title;
     editState.description = item.description;
     editState.url = item.url;
-    editState.price = item.price;
+    editState.price = parseFloat(item.price);
     editState.quantity = item.quantity;
     editState.archived = item.archived;
     editState.reserved = item.reserved;
@@ -216,6 +216,7 @@
           <UButton @click="setEditModal(item)" icon="i-system-uicons:pen" color="success" />
           <template #content>
             <div class="modal-form-wrapper">
+
               <UForm class="edit-form" :schema="editSchema" :state="editState">
 
                 <UFormField label="Title" name="title">
@@ -234,11 +235,24 @@
                   <UInput v-model="editState.url" type="text" />
                 </UFormField>
 
+                <UFormField label="Quantity" name="quantity">
+                  <UInput v-model="editState.quantity" type="number" />
+                </UFormField>
+
+                <UFormField label="Price" name="price">
+                  <UInput v-model="editState.price" type="number" />
+                </UFormField>
+
+                <UFormField label="Archival Status" name="archived">
+                  <UCheckbox v-model="editState.archived" label="Archived" />
+                </UFormField>
+
+                <UFormField label="Reservation Status" name="reserved">
+                  <UCheckbox v-model="editState.reserved" label="Reserved" />
+                </UFormField>
+
                 <!--
 
-                  editState.url = item.url;
-                  editState.price = item.price;
-                  editState.quantity = item.quantity;
                   editState.archived = item.archived;
                   editState.reserved = item.reserved;
                   editState.groupId = item.groupId;
@@ -246,6 +260,7 @@
                 -->
 
               </UForm>
+
             </div>
           </template>
         </UModal>

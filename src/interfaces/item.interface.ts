@@ -7,7 +7,7 @@ export default interface IItem extends ITimestamp {
   thumbnail: string,
   url: string,
   quantity: number,
-  price: number,
+  price: string,
   archived: boolean,
   reserved: boolean,
   groupId: string,
