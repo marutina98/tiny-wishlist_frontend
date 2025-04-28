@@ -211,16 +211,22 @@
       <div class="item-edit">
         <UModal v-model:open="openModalEdit">
           <UButton @click="setEditModal(item)" icon="i-system-uicons:pen" color="success" />
-          <template #content>      
-            
-            {{ editState }}
+          <template #content>
+            <div class="modal-form-wrapper">
+              <UForm class="edit-form" :schema="editSchema" :state="editState">
+                <UFormField label="Title" name="title">
+                  <UInput v-model="editState.title" type="text"/>
+                </UFormField>
 
-            <UForm :schema="editSchema" :state="editState">
-              <UFormField label="Thumbnail" name="thumbnail">
-                <UInput @change="handleThumbnailChange" type="file" />
-              </UFormField>
-            </UForm>
+                <UFormField label="Description" name="description">
+                  <UInput v-model="editState.description" type="text"/>
+                </UFormField>
 
+                <UFormField label="Thumbnail" name="thumbnail">
+                  <UInput @change="handleThumbnailChange" type="file" />
+                </UFormField>
+              </UForm>
+            </div>
           </template>
         </UModal>
       </div>
@@ -296,6 +302,14 @@
 
   .modal-buttons {
     @apply flex flex-row gap-2 justify-center;
+  }
+
+  .modal-form-wrapper {
+    @apply flex flex-col items-center p-4;
+  }
+
+  .edit-form {
+    @apply flex flex-col gap-2;
   }
 
 </style>
