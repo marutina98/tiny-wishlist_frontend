@@ -34,6 +34,8 @@
   const toggleModalDelete = () => {
     openModalDelete.value = !openModalDelete.value;
   }
+
+  // Delete Item
   
   const deleteItem = async (id: string) => {
     
@@ -69,6 +71,8 @@
     toggleModalDelete();
 
   }
+
+  // Edit Item
   
   const editItem = (id: string) => {
     console.log('edit');
