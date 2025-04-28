@@ -25,8 +25,13 @@
   const openModalDelete = ref(false);
   const openModalEdit = ref(false);
 
+  const toggleModalDelete = () => {
+    openModalDelete.value = !openModalDelete.value;
+  }
+  
   const deleteItem = (id: string) => {
     console.log('delete');
+    toggleModalDelete();
   }
   
   const editItem = (id: string) => {
@@ -64,7 +69,16 @@
         <UModal v-model:open="openModalDelete">
           <UButton icon="i-system-uicons:trash" color="error" />
           <template #content>
-            Delete
+            <div class="modal">
+              <div class="modal-content">
+                Delete
+              </div>
+              <USeparator />
+              <div class="modal-buttons">
+                <UButton color="success" label="Yes" @click="deleteItem(item.id)" />
+                <UButton color="error" label="No" @click="toggleModalDelete" />
+              </div>
+            </div>
           </template>
         </UModal>
       </div>
@@ -140,6 +154,14 @@
   .item-settings {
     @apply flex justify-between absolute h-full w-full top-0 left-0;
   }
-  
+
+  .modal-content,
+  .modal-buttons {
+    @apply p-2;
+  }
+
+  .modal-buttons {
+    @apply flex flex-row gap-2 justify-center;
+  }
 
 </style>
