@@ -19,7 +19,15 @@
       '--background-image': `url(${thumbnail})`
     };
   });
+
+  const deleteItem = (id: string) => {
+
+  }
   
+  const editItem = (id: string) => {
+
+  }
+
 </script>
 
 <template>
