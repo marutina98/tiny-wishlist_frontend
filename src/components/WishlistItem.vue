@@ -51,7 +51,7 @@
         <UIcon class="item-settings-btn size-5" name="i-system-uicons:trash"  />
       </div>
       <div class="item-edit">
-        <UIcon class="item-settings-btn size-5" name="i-system-uicons:trash"  />
+        <UIcon class="item-settings-btn size-5" name="i-system-uicons:pen"  />
       </div>
     </div>
   </div>
@@ -115,21 +115,27 @@
   }
 
   .item-settings {
-    height: 100%;
-    left: 0;
-    top: 0;
-    width: 100%;
-    position: absolute;
+    @apply flex justify-between absolute h-full w-full top-0 left-0;
   }
 
   .item-settings-btn {
     @apply rounded-full p-1 text-white w-8 h-8 text-sm cursor-pointer;
+  }
+
+  .item-delete .item-settings-btn {
     background-color: var(--color-red-500);
   }
 
-  .item-settings-btn:hover,
-  .item-settings-btn:focus {
+  .item-delete .item-settings-btn:is(:hover, :focus) {
     background-color: var(--color-red-700);
+  }
+
+  .item-edit .item-settings-btn {
+    background-color: var(--color-green-500);
+  }
+
+  .item-edit .item-settings-btn:is(:hover, :focus) {
+    background-color: var(--color-green-700);
   }
   
 
