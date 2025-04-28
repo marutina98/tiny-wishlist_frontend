@@ -12,11 +12,6 @@
     }
   });
 
-  const emit = defineEmits<{
-    closeModalDelete: [boolean],
-    closeModalEdit: [boolean]
-  }>();
-
   const item = computed(() => props.item as IItem);
   const css = computed(() => {
     const thumbnail = props.item.thumbnail ?? SHelpers.getPlaceholderImage();
@@ -25,20 +20,17 @@
     };
   });
 
-  const openModalDelete = () => {
-    emit('closeModalDelete', true);
-  }
+  // Modal Status
 
-  const openModalEdit = () => {
-    emit('closeModalEdit', true);
-  }
+  const openModalDelete = ref(false);
+  const openModalEdit = ref(false);
 
   const deleteItem = (id: string) => {
-
+    console.log('delete');
   }
   
   const editItem = (id: string) => {
-
+    console.log('edit');
   }
 
 </script>
@@ -69,16 +61,16 @@
     </div>
     <div class="item-settings">
       <div class="item-delete">
-        <UModal :close="{ onClick: () => emit('closeModalDelete', false) }">
-          <UIcon @click="openModalDelete" class="item-settings-btn size-5" name="i-system-uicons:trash"  />
+        <UModal v-model:open="openModalDelete">
+          <UButton icon="i-system-uicons:trash" color="error" />
           <template #content>
             Delete
           </template>
         </UModal>
       </div>
       <div class="item-edit">
-        <UModal :close="{ onClick: () => emit('closeModalEdit', false) }">
-          <UIcon @click="openModalEdit" class="item-settings-btn size-5" name="i-system-uicons:pen"  />
+        <UModal v-model:open="openModalEdit">
+          <UButton icon="i-system-uicons:pen" color="success" />
           <template #content>
             Edit
           </template>
@@ -147,26 +139,6 @@
 
   .item-settings {
     @apply flex justify-between absolute h-full w-full top-0 left-0;
-  }
-
-  .item-settings-btn {
-    @apply rounded-full p-1 text-white w-8 h-8 text-sm cursor-pointer;
-  }
-
-  .item-delete .item-settings-btn {
-    background-color: var(--color-red-500);
-  }
-
-  .item-delete .item-settings-btn:is(:hover, :focus) {
-    background-color: var(--color-red-700);
-  }
-
-  .item-edit .item-settings-btn {
-    background-color: var(--color-green-500);
-  }
-
-  .item-edit .item-settings-btn:is(:hover, :focus) {
-    background-color: var(--color-green-700);
   }
   
 
