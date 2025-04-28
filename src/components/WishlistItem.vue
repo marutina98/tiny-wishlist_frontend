@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-  import { computed } from 'vue';
+  import { computed, ref, defineEmits } from 'vue';
   import SHelpers from '@/services/helpers.service';
 
   import type IItem from '@/interfaces/item.interface';
@@ -12,6 +12,11 @@
     }
   });
 
+  const emit = defineEmits<{
+    closeModalDelete: [boolean],
+    closeModalEdit: [boolean]
+  }>();
+
   const item = computed(() => props.item as IItem);
   const css = computed(() => {
     const thumbnail = props.item.thumbnail ?? SHelpers.getPlaceholderImage();
@@ -19,6 +24,14 @@
       '--background-image': `url(${thumbnail})`
     };
   });
+
+  const openModalDelete = () => {
+    emit('closeModalDelete', true);
+  }
+
+  const openModalEdit = () => {
+    emit('closeModalEdit', true);
+  }
 
   const deleteItem = (id: string) => {
 
@@ -56,10 +69,20 @@
     </div>
     <div class="item-settings">
       <div class="item-delete">
-        <UIcon class="item-settings-btn size-5" name="i-system-uicons:trash"  />
+        <UModal :close="{ onClick: () => emit('closeModalDelete', false) }">
+          <UIcon @click="openModalDelete" class="item-settings-btn size-5" name="i-system-uicons:trash"  />
+          <template #content>
+            Delete
+          </template>
+        </UModal>
       </div>
       <div class="item-edit">
-        <UIcon class="item-settings-btn size-5" name="i-system-uicons:pen"  />
+        <UModal :close="{ onClick: () => emit('closeModalEdit', false) }">
+          <UIcon @click="openModalEdit" class="item-settings-btn size-5" name="i-system-uicons:pen"  />
+          <template #content>
+            Edit
+          </template>
+        </UModal>
       </div>
     </div>
   </div>
