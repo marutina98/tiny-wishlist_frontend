@@ -48,6 +48,14 @@ class SApi {
     });
   }
 
+  public async deleteItem(id: string, token: string) {
+    return await this.getRequest({
+      apiURL: `${this.baseURL}/item/${id}`,
+      method: 'DELETE',
+      token: token,
+    });
+  }
+
   public getRequest(requestConfig: IRequestConfig) {
 
     const settings: RequestInit = {

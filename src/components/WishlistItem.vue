@@ -1,9 +1,15 @@
 <script setup lang="ts">
 
-  import { computed, ref, defineEmits } from 'vue';
+  import { computed, ref, defineEmits, inject } from 'vue';
+
+  import SApi from '@/services/api.service';
   import SHelpers from '@/services/helpers.service';
 
   import type IItem from '@/interfaces/item.interface';
+  import type IAuth from '@/interfaces/auth.interface';
+
+  const auth = inject('auth') as IAuth;
+  const toast = useToast();
 
   const props = defineProps({
     item: {
@@ -29,9 +35,39 @@
     openModalDelete.value = !openModalDelete.value;
   }
   
-  const deleteItem = (id: string) => {
-    console.log('delete');
+  const deleteItem = async (id: string) => {
+    
+    // Get token from auth
+    // Pass token to SApi
+    // delete item and close modal
+
+    const token = auth.getToken();
+
+    const request = await SApi.deleteItem(id, token);
+
+    // show toast
+    // @todo: send emit to fetch list again
+
+    if (request.ok) {
+
+      // @todo: emit here
+      
+      toast.add({
+        title: 'Item was deleted succesfully.',
+        color: 'success'
+      });
+
+    } else {
+
+      toast.add({
+        title: 'Item could not be deleted. Try again.',
+        color: 'error'
+      });
+
+    }
+
     toggleModalDelete();
+
   }
   
   const editItem = (id: string) => {
@@ -71,7 +107,7 @@
           <template #content>
             <div class="modal">
               <div class="modal-content">
-                Delete
+                Do you want to delete this item ?
               </div>
               <USeparator />
               <div class="modal-buttons">

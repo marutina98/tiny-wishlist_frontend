@@ -7,4 +7,5 @@ export default interface IAuth {
   removeToken: Function,
   isAuthenticated: Function,
   isGuest: Function,
+  deleteItem: Function,
 }
