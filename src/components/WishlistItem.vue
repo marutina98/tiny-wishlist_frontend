@@ -133,7 +133,8 @@
         </div>
       </div>
       <div class="item-info-center">
-
+        archived
+        reserved
       </div>
       <div class="item-info-bottom">
         <div class="item-quantity">
