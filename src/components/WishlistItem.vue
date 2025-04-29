@@ -170,6 +170,24 @@
 
 <template>
 
+  <div class="item">
+
+    <img class="item-thumbnail" :src="item.thumbnail" :alt="item.title">
+
+    <div class="item-info">
+      <div class="item-title">{{ item.title }}</div>
+      <div class="item-description">{{ item.description }}</div>
+    </div>
+
+    <div class="item-settings">
+
+
+    </div>
+    
+  </div>
+
+  <!--
+
   <div class="item" :style="css">
     <div class="item-info">
       <div class="item-info-top">
@@ -251,14 +269,6 @@
                   <UCheckbox v-model="editState.reserved" label="Reserved" />
                 </UFormField>
 
-                <!--
-
-                  editState.archived = item.archived;
-                  editState.reserved = item.reserved;
-                  editState.groupId = item.groupId;
-
-                -->
-
               </UForm>
 
             </div>
@@ -268,11 +278,32 @@
     </div>
   </div>
 
+  -->
+
 </template>
 
 <style scoped>
 
   @reference 'tailwindcss';
+
+  .item {
+    @apply flex flex-col gap-2;
+  }
+
+  .item-info {
+    @apply flex flex-col gap-2;
+  }
+
+  .item-title {
+    @apply font-bold truncate;
+  }
+
+  .item-title,
+  .item-description {
+    @apply bg-stone-50 p-2 text-sm;
+  }
+
+  /*
 
   .item {
     @apply p-4 relative;
@@ -346,5 +377,7 @@
   .edit-form {
     @apply flex flex-col gap-2;
   }
+
+  */
 
 </style>
