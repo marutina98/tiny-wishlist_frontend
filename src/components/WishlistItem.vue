@@ -186,6 +186,10 @@
 
         const putItemArr: [string, string|number|boolean][] = [];
 
+        if (dataUri.length > 0) {
+          putItemArr.push(['thumbnail', dataUri]);
+        }
+
         for (let [k, v] of state) {
           
           // if the value is valid
