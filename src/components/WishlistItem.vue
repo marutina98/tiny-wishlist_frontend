@@ -2,7 +2,7 @@
 
   import * as v from 'valibot';
 
-  import { computed, ref, inject, reactive } from 'vue';
+  import { computed, ref, inject, reactive, toRaw } from 'vue';
 
   import SApi from '@/services/api.service';
   import SHelpers from '@/services/helpers.service';
@@ -10,6 +10,7 @@
   import type IItem from '@/interfaces/item.interface';
   import type IAuth from '@/interfaces/auth.interface';
   import type IGroup from '@/interfaces/group.interface';
+import type IRequestPutItem from '@/interfaces/request-put-item.interface';
 
   const auth = inject('auth') as IAuth;
   const toast = useToast();
@@ -108,11 +109,10 @@
     const request = await SApi.deleteItem(id, token);
 
     // show toast
-    // @todo: send emit to fetch list again
 
     if (request.ok) {
 
-      // @todo: emit here
+      // @todo: eventbus
       
       toast.add({
         title: 'Item was deleted succesfully.',
@@ -135,8 +135,6 @@
   // Edit Item
 
   // Set editStatus
-
-  // const blob = new Blob([file], { type: file.type })
 
   const setEditModal = async (item: IItem) => {
 
@@ -165,21 +163,76 @@
 
   };
   
-  const editItem = () => {
+  const editItem = (id: string) => {
 
-    
+    // Transform thumbnail (file) to blob
+    // transform blob to data-uri
 
-    // @todo: move in submit
+    // send data to SApi then to backend
 
-    // const file = editState.thumbnail;
-    // const blob = new Blob([file], { type: file.type });
+    const file = editState.thumbnail;
+    const blob = new Blob([file], { type: file.type });
 
-    // console.log(SHelpers.blobToDataURL(
-    //   blob,
-    //   (data: string) => {
-    //     console.log(data)
-    //   }
-    // ))
+    SHelpers.blobToDataURL(
+      blob,
+      async (dataUri: string) => {
+
+        // Remove empty elements before
+        // sending to backend
+
+        const state = Object.entries(toRaw(editState));
+
+        const putItemArr: [string, string|number][] = [];
+
+        for (let [k, v] of state) {
+          
+          // if the value is valid
+          // add to array
+
+          if (
+            typeof v === 'string' && v.length > 0 ||
+            typeof v === 'number'
+          ) {
+            putItemArr.push([k, v]);
+          }
+
+        }
+
+        const putItem: IRequestPutItem = {
+          id,
+          ...Object.fromEntries(putItemArr),
+        };
+
+        const token = auth.getToken();
+
+        const request = await SApi.putItem(putItem, token);
+
+        // show toast
+
+        if (request.ok) {
+
+          // @todo: eventbus
+
+          toast.add({
+            title: 'Item was updated succesfully.',
+            color: 'success'
+          });
+
+          } else {
+
+          toast.add({
+            title: 'Item could not be updated. Try again.',
+            color: 'error'
+          });
+
+        }
+
+        toggleModalEdit();
+
+      }
+    );
+
+    // @todo: eventBus
 
   }
 
@@ -215,7 +268,7 @@
             <template #content>
               <div class="modal-form-wrapper">
 
-                <UForm class="edit-form" :schema="editSchema" :state="editState">
+                <UForm class="edit-form" :schema="editSchema" :state="editState" @submit.prevent="editItem(item.id)">
 
                   <UFormField label="Title" name="title">
                     <UInput v-model="editState.title" type="text"/>
@@ -252,6 +305,8 @@
                   <UFormField label="Group" name="groupId">
                     <USelect v-model="editState.groupId" value-key="id" :items="selectGroups" />
                   </UFormField>
+
+                  <UButton type="submit" label="Submit" />
 
                 </UForm>
 

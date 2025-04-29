@@ -2,6 +2,7 @@ import type IRequestLogin from '@/interfaces/request-login.interface';
 import type IRequestConfig from '@/interfaces/request-config.interface';
 import type IRequestRegister from '@/interfaces/request-register.interface';
 import type IRequestUpdateUser from '@/interfaces/request-update-user.interface';
+import type IRequestPutItem from '@/interfaces/request-put-item.interface';
 
 class SApi {
 
@@ -45,6 +46,15 @@ class SApi {
       method: 'PUT',
       body: JSON.stringify(body),
       token: token,
+    });
+  }
+
+  public async putItem(data: IRequestPutItem, token: string) {
+    return await this.getRequest({
+      apiURL: `${this.baseURL}/item/${data.id}`,
+      method: 'PUT',
+      token: token,
+      body: JSON.stringify(data),
     });
   }
 
