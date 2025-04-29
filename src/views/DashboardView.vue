@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-  import { ref, onBeforeMount, inject } from 'vue';
+  import { ref, onBeforeMount, inject, computed } from 'vue';
 
   import SApi from '@/services/api.service';
 
@@ -14,8 +14,12 @@
   import type IUser from '@/interfaces/user.interface';
   import type IAuth from '@/interfaces/auth.interface';
 
+  import eventBusRefetch from '@/services/event-bus-refetch.service';
+
   const user: Ref<IUser|null> = ref(null);
   const activeComponentIndex = ref('0');
+
+  const auth = inject('auth') as IAuth;
 
   const components = [
     Profile,
@@ -35,8 +39,11 @@
   // put it into user
 
   onBeforeMount(async () => {
+    await fetchAuthenticatedUser();
+  });
 
-    const auth = inject('auth') as IAuth;
+  const fetchAuthenticatedUser = async () => {
+
     const token = auth.getToken();
     const request = await SApi.getAuthenticatedUser(token);
     
@@ -45,6 +52,17 @@
       user.value = response;
     }
 
+  }
+
+  // Subscribe to eventBusRefetch to refetch user
+  // when item/group/list is created/updated/deleted
+
+  const subscribeRefetch = eventBusRefetch.on(async (refetch: boolean) => {
+    console.log('emitted');
+    if (refetch) {
+      console.log('refetched');
+      await fetchAuthenticatedUser();
+    }
   });
 
 </script>
@@ -56,7 +74,6 @@
         <div class="tabs">
           <UTabs v-model="activeComponentIndex" :content="false" :items />
         </div>
-
         <div class="content">
           <UCard>
             <template #default>

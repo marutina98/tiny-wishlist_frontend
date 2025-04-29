@@ -10,7 +10,9 @@
   import type IItem from '@/interfaces/item.interface';
   import type IAuth from '@/interfaces/auth.interface';
   import type IGroup from '@/interfaces/group.interface';
-import type IRequestPutItem from '@/interfaces/request-put-item.interface';
+  import type IRequestPutItem from '@/interfaces/request-put-item.interface';
+
+  import eventBusRefetch from '@/services/event-bus-refetch.service';
 
   const auth = inject('auth') as IAuth;
   const toast = useToast();
@@ -112,7 +114,7 @@ import type IRequestPutItem from '@/interfaces/request-put-item.interface';
 
     if (request.ok) {
 
-      // @todo: eventbus
+      eventBusRefetch.emit(true);
       
       toast.add({
         title: 'Item was deleted succesfully.',
@@ -182,7 +184,7 @@ import type IRequestPutItem from '@/interfaces/request-put-item.interface';
 
         const state = Object.entries(toRaw(editState));
 
-        const putItemArr: [string, string|number][] = [];
+        const putItemArr: [string, string|number|boolean][] = [];
 
         for (let [k, v] of state) {
           
@@ -190,7 +192,8 @@ import type IRequestPutItem from '@/interfaces/request-put-item.interface';
           // add to array
 
           if (
-            typeof v === 'string' && v.length > 0 ||
+            typeof v === 'boolean' ||
+            (typeof v === 'string' && v.length > 0) ||
             typeof v === 'number'
           ) {
             putItemArr.push([k, v]);
@@ -211,7 +214,7 @@ import type IRequestPutItem from '@/interfaces/request-put-item.interface';
 
         if (request.ok) {
 
-          // @todo: eventbus
+          eventBusRefetch.emit(true);
 
           toast.add({
             title: 'Item was updated succesfully.',
