@@ -1,13 +1,20 @@
 <script setup lang="ts">
 
-  import { computed, onBeforeMount, ref } from 'vue';
+  import { computed, onBeforeMount, ref, inject } from 'vue';
 
   import type { Ref } from 'vue';
   import type { TreeItem } from '@nuxt/ui';
   import type IUser from '@/interfaces/user.interface';
   import type IList from '@/interfaces/list.interface';
+  import type IAuth from '@/interfaces/auth.interface';
 
   import WishlistList from './WishlistList.vue';
+
+  import SApi from '@/services/api.service';
+
+  import eventBusRefetch from '@/services/event-bus-refetch.service';
+
+  const auth = inject('auth') as IAuth;
 
   const props = defineProps({
     user: {
@@ -112,6 +119,32 @@
     ];
 
     items.value = _items;
+
+  });
+
+  const fetchAuthenticatedUser = async () => {
+
+    const token = auth.getToken();
+    const request = await SApi.getAuthenticatedUser(token);
+
+    if (request.ok) {
+      const response = await request.json();
+      props.user.value = response;
+    }
+
+  }
+
+  const subscribedBus = eventBusRefetch.on(async (refetch: boolean) => {
+    
+    const token = auth.getToken();
+    const request = await SApi.getAuthenticatedUser(token);
+
+    if (request.ok) {
+      const response = await request.json();
+      
+      console.log(response);
+
+    }
 
   });
 

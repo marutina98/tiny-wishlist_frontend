@@ -186,23 +186,27 @@
 
         const putItemArr: [string, string|number|boolean][] = [];
 
-        if (dataUri.length > 0) {
-          putItemArr.push(['thumbnail', dataUri]);
-        }
-
         for (let [k, v] of state) {
           
           // if the value is valid
           // add to array
 
           if (
-            typeof v === 'boolean' ||
-            (typeof v === 'string' && v.length > 0) ||
-            typeof v === 'number'
+            (
+              typeof v === 'boolean' ||
+              (typeof v === 'string' && v.length > 0) ||
+              typeof v === 'number'
+            ) && k !== 'thumbnail'
           ) {
             putItemArr.push([k, v]);
           }
 
+        }
+
+        // check that the datauri is an image and not an empty file
+
+        if (dataUri.length > 0 && !dataUri.startsWith('data:application/')) {
+          putItemArr.push(['thumbnail', dataUri]);
         }
 
         const putItem: IRequestPutItem = {

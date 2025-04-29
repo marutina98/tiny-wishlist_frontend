@@ -14,12 +14,9 @@
   import type IUser from '@/interfaces/user.interface';
   import type IAuth from '@/interfaces/auth.interface';
 
-  import eventBusRefetch from '@/services/event-bus-refetch.service';
-
+  const auth = inject('auth') as IAuth;
   const user: Ref<IUser|null> = ref(null);
   const activeComponentIndex = ref('0');
-
-  const auth = inject('auth') as IAuth;
 
   const components = [
     Profile,
@@ -53,17 +50,6 @@
     }
 
   }
-
-  // Subscribe to eventBusRefetch to refetch user
-  // when item/group/list is created/updated/deleted
-
-  const subscribeRefetch = eventBusRefetch.on(async (refetch: boolean) => {
-    console.log('emitted');
-    if (refetch) {
-      console.log('refetched');
-      await fetchAuthenticatedUser();
-    }
-  });
 
 </script>
 
