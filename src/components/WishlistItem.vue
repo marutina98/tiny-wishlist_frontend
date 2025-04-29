@@ -172,7 +172,19 @@
 
   <div class="item">
 
-    <img class="item-thumbnail" :src="item.thumbnail" :alt="item.title">
+    <div class="item-header" :style="css">
+
+      <div v-if="item.archived || item.reserved" class="item-status">
+        <span v-if="item.archived" class="item-archived">
+          Archived
+        </span>
+
+        <span v-if="item.reserved" class="item-reserved">
+          Reserved
+        </span>
+      </div>
+        
+    </div>
 
     <div class="item-info">
       <div class="item-title">{{ item.title }}</div>
@@ -290,17 +302,33 @@
     @apply flex flex-col gap-2;
   }
 
+  .item-header {
+    @apply flex flex-col justify-end;
+    background-image: var(--background-image);
+    height: 300px;
+  }
+
+  .item-status {
+    @apply flex justify-center gap-2 w-full p-2;
+  }
+
   .item-info {
     @apply flex flex-col gap-2;
+  }
+
+  .item-title,
+  .item-description,
+  .item-archived,
+  .item-reserved {
+    @apply bg-stone-50 p-2 text-sm;
   }
 
   .item-title {
     @apply font-bold truncate;
   }
 
-  .item-title,
   .item-description {
-    @apply bg-stone-50 p-2 text-sm;
+    @apply italic;
   }
 
   /*
