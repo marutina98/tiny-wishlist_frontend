@@ -39,6 +39,39 @@
 
   onBeforeMount(() => {
 
+    if (lists.value) {
+      filterLists(lists.value);
+    }
+
+  });
+
+  const fetchAuthenticatedUser = async () => {
+
+    const token = auth.getToken();
+    const request = await SApi.getAuthenticatedUser(token);
+
+    if (request.ok) {
+      const response = await request.json();
+      props.user.value = response;
+    }
+
+  }
+
+  const subscribedBus = eventBusRefetch.on(async (refetch: boolean) => {
+    
+    const token = auth.getToken();
+    const request = await SApi.getAuthenticatedUser(token);
+
+    if (request.ok) {
+      const response = await request.json() as IUser;
+      const lists = response.lists ?? [];
+      filterLists(lists);
+    }
+
+  });
+
+  const filterLists = (lists: IList[]) => {
+
     // Get wishlists with their statuses
 
     const publicLists = [];
@@ -47,9 +80,17 @@
     const archivedPublicLists: TreeItem[] = [];
     const archivedPrivateLists: TreeItem[] = [];
 
-    if (lists.value) {
+    // Change active list
 
-      for (let list of lists.value) {
+    if (activeList.value) {
+      const id = activeList.value.id;
+      const list = lists.find((l: IList) => l.id === id);
+      if (list) activeList.value = list;
+    }
+
+    if (lists) {
+
+      for (let list of lists) {
 
         const listObj = {
           label: list.title,
@@ -120,33 +161,7 @@
 
     items.value = _items;
 
-  });
-
-  const fetchAuthenticatedUser = async () => {
-
-    const token = auth.getToken();
-    const request = await SApi.getAuthenticatedUser(token);
-
-    if (request.ok) {
-      const response = await request.json();
-      props.user.value = response;
-    }
-
   }
-
-  const subscribedBus = eventBusRefetch.on(async (refetch: boolean) => {
-    
-    const token = auth.getToken();
-    const request = await SApi.getAuthenticatedUser(token);
-
-    if (request.ok) {
-      const response = await request.json();
-      
-      console.log(response);
-
-    }
-
-  });
 
 </script>
 
