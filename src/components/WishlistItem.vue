@@ -26,7 +26,19 @@
   });
 
   const item = computed(() => props.item as IItem);
-  const groups = computed(() => props.groups as IGroup[]);
+
+  const selectGroups = computed(() => {
+
+    const _groups = props.groups as IGroup[];
+
+    _groups.map((g: IGroup) => {
+      g.label = g.title;
+      return g;
+    });
+
+    return _groups;
+
+  });
 
   const css = computed(() => {
     const thumbnail = props.item.thumbnail ?? SHelpers.getPlaceholderImage();
@@ -140,8 +152,6 @@
     editState.archived = item.archived;
     editState.reserved = item.reserved;
     editState.groupId = item.groupId;
-    
-    console.log(editState);
 
   }
 
@@ -152,6 +162,12 @@
     if (target.files && target.files[0]) {
       editState.thumbnail = target.files[0];
     }
+
+  };
+  
+  const editItem = () => {
+
+    
 
     // @todo: move in submit
 
@@ -164,14 +180,6 @@
     //     console.log(data)
     //   }
     // ))
-
-  };
-  
-  const editItem = () => {
-
-    console.log(groups.value);
-
-    console.log('edit');
 
   }
 
@@ -239,6 +247,10 @@
 
                   <UFormField label="Reservation Status" name="reserved">
                     <UCheckbox v-model="editState.reserved" label="Reserved" />
+                  </UFormField>
+
+                  <UFormField label="Group" name="groupId">
+                    <USelect v-model="editState.groupId" value-key="id" :items="selectGroups" />
                   </UFormField>
 
                 </UForm>
