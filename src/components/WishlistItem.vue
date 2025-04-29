@@ -174,6 +174,72 @@
 
     <div class="item-header" :style="css">
 
+      <div class="item-settings">
+        <div class="item-delete">
+          <UModal v-model:open="openModalDelete">
+            <UButton icon="i-system-uicons:trash" color="error" />
+            <template #content>
+              <div class="modal">
+                <div class="modal-content">
+                  Do you want to delete this item ?
+                </div>
+                <USeparator />
+                <div class="modal-buttons">
+                  <UButton color="success" label="Yes" @click="deleteItem(item.id)" />
+                  <UButton color="error" label="No" @click="toggleModalDelete" />
+                </div>
+              </div>
+            </template>
+          </UModal>
+        </div>
+        <div class="item-edit">
+          <UModal v-model:open="openModalEdit">
+            <UButton @click="setEditModal(item)" icon="i-system-uicons:pen" color="success" />
+            <template #content>
+              <div class="modal-form-wrapper">
+
+                <UForm class="edit-form" :schema="editSchema" :state="editState">
+
+                  <UFormField label="Title" name="title">
+                    <UInput v-model="editState.title" type="text"/>
+                  </UFormField>
+
+                  <UFormField label="Description" name="description">
+                    <UInput v-model="editState.description" type="text"/>
+                  </UFormField>
+
+                  <UFormField label="Thumbnail" name="thumbnail">
+                    <UInput @change="handleThumbnailChange" type="file" />
+                  </UFormField>
+
+                  <UFormField label="URL" name="url">
+                    <UInput v-model="editState.url" type="text" />
+                  </UFormField>
+
+                  <UFormField label="Quantity" name="quantity">
+                    <UInput v-model="editState.quantity" type="number" />
+                  </UFormField>
+
+                  <UFormField label="Price" name="price">
+                    <UInput v-model="editState.price" type="number" />
+                  </UFormField>
+
+                  <UFormField label="Archival Status" name="archived">
+                    <UCheckbox v-model="editState.archived" label="Archived" />
+                  </UFormField>
+
+                  <UFormField label="Reservation Status" name="reserved">
+                    <UCheckbox v-model="editState.reserved" label="Reserved" />
+                  </UFormField>
+
+                </UForm>
+
+              </div>
+            </template>
+          </UModal>
+        </div>
+      </div>
+
       <div v-if="item.archived || item.reserved" class="item-status">
         <span v-if="item.archived" class="item-archived">
           Archived
@@ -187,110 +253,17 @@
     </div>
 
     <div class="item-info">
-      <div class="item-title">{{ item.title }}</div>
-      <div class="item-description">{{ item.description }}</div>
-    </div>
-
-    <div class="item-settings">
-
-
+      <div class="item-info-row">
+        <div class="item-title">{{ item.title }}</div>
+        <div class="item-description">{{ item.description }}</div>
+      </div>
+      <div class="item-info-row item-info-row-grid">
+        <div class="item-quantity">{{ item.quantity }}</div>
+        <div class="item-price">{{ item.price }}</div>
+      </div>
     </div>
     
   </div>
-
-  <!--
-
-  <div class="item" :style="css">
-    <div class="item-info">
-      <div class="item-info-top">
-        <div class="item-title">
-          {{ item.title }}
-        </div>
-        <div class="item-description">
-          {{ item.description }}
-        </div>
-      </div>
-      <div class="item-info-center">
-        archived
-        reserved
-      </div>
-      <div class="item-info-bottom">
-        <div class="item-quantity">
-          {{ item.quantity }}
-        </div>
-        <div class="item-price">
-          {{ item.price }}
-        </div>
-      </div>
-    </div>
-    <div class="item-settings">
-      <div class="item-delete">
-        <UModal v-model:open="openModalDelete">
-          <UButton icon="i-system-uicons:trash" color="error" />
-          <template #content>
-            <div class="modal">
-              <div class="modal-content">
-                Do you want to delete this item ?
-              </div>
-              <USeparator />
-              <div class="modal-buttons">
-                <UButton color="success" label="Yes" @click="deleteItem(item.id)" />
-                <UButton color="error" label="No" @click="toggleModalDelete" />
-              </div>
-            </div>
-          </template>
-        </UModal>
-      </div>
-      <div class="item-edit">
-        <UModal v-model:open="openModalEdit">
-          <UButton @click="setEditModal(item)" icon="i-system-uicons:pen" color="success" />
-          <template #content>
-            <div class="modal-form-wrapper">
-
-              <UForm class="edit-form" :schema="editSchema" :state="editState">
-
-                <UFormField label="Title" name="title">
-                  <UInput v-model="editState.title" type="text"/>
-                </UFormField>
-
-                <UFormField label="Description" name="description">
-                  <UInput v-model="editState.description" type="text"/>
-                </UFormField>
-
-                <UFormField label="Thumbnail" name="thumbnail">
-                  <UInput @change="handleThumbnailChange" type="file" />
-                </UFormField>
-
-                <UFormField label="URL" name="url">
-                  <UInput v-model="editState.url" type="text" />
-                </UFormField>
-
-                <UFormField label="Quantity" name="quantity">
-                  <UInput v-model="editState.quantity" type="number" />
-                </UFormField>
-
-                <UFormField label="Price" name="price">
-                  <UInput v-model="editState.price" type="number" />
-                </UFormField>
-
-                <UFormField label="Archival Status" name="archived">
-                  <UCheckbox v-model="editState.archived" label="Archived" />
-                </UFormField>
-
-                <UFormField label="Reservation Status" name="reserved">
-                  <UCheckbox v-model="editState.reserved" label="Reserved" />
-                </UFormField>
-
-              </UForm>
-
-            </div>
-          </template>
-        </UModal>
-      </div>
-    </div>
-  </div>
-
-  -->
 
 </template>
 
@@ -303,7 +276,7 @@
   }
 
   .item-header {
-    @apply flex flex-col justify-end;
+    @apply flex flex-col justify-between;
     background-image: var(--background-image);
     height: 300px;
   }
@@ -316,10 +289,16 @@
     @apply flex flex-col gap-2;
   }
 
+  .item-info-row-grid {
+    @apply grid grid-cols-2 gap-2 text-center;
+  }
+
   .item-title,
   .item-description,
   .item-archived,
-  .item-reserved {
+  .item-reserved,
+  .item-price,
+  .item-quantity {
     @apply bg-stone-50 p-2 text-sm;
   }
 
@@ -331,62 +310,23 @@
     @apply italic;
   }
 
-  /*
-
-  .item {
-    @apply p-4 relative;
-  }
-
-  .item-info {
-    @apply flex flex-col aspect-square p-2 gap-2 justify-between;
-    background-image: var(--background-image);
-    background-position: center center;
-    background-size: cover;
-  }
-
-  .item-info-top,
-  .item-info-center {
-    @apply flex flex-col gap-2;
-  }
-
-  .item-info-bottom {
-    @apply flex flex-row justify-between;
-  }
-
-  .item-title,
-  .item-description,
-  .item-quantity,
-  .item-price {
-    @apply bg-white p-2 text-sm truncate;
-  }
-
   :is(
-    .item-title,
-    .item-description,
+    .item-price,
     .item-quantity
   )::before {
-    @apply uppercase underline mr-0.5;
+    @apply uppercase underline mr-1;
   }
 
-  .item-title::before {
-    content: 'Title';
-  }
-
-  .item-description::before {
-    content: 'Description';
+  .item-price::before {
+    content: 'Price';
   }
 
   .item-quantity::before {
     content: 'Quantity';
   }
 
-  .item-price::before {
-    @apply mr-0.5;
-    content: '€';
-  }
-
   .item-settings {
-    @apply flex justify-between absolute h-full w-full top-0 left-0;
+    @apply flex justify-between gap-2 w-full p-2;
   }
 
   .modal-content,
@@ -405,7 +345,5 @@
   .edit-form {
     @apply flex flex-col gap-2;
   }
-
-  */
 
 </style>
