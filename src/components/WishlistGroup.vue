@@ -3,10 +3,17 @@
   import type IGroup from '@/interfaces/group.interface';
   import { computed, ref } from 'vue';
 
+  // I need to pass the groups of the list to the props
+  // to then pass it to wishlistItem for the update
+
   const props = defineProps({
     group: {
       required: true,
       type: Object
+    },
+    groups: {
+      required: true,
+      type: Array
     }
   });
 
@@ -52,7 +59,7 @@
       <template #content>
         <template v-if="group.items.length > 0">
           <div class="items">
-            <WishlistItem :item v-for="item of group.items" :key="item.id" />
+            <WishlistItem :groups :item v-for="item of group.items" :key="item.id" />
           </div>
         </template>
         <template v-else>

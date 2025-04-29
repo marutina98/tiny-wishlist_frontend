@@ -70,7 +70,7 @@ import { computed } from 'vue';
           <div class="groups-active-header">
             <h2>Active Groups</h2>
           </div>
-          <WishlistGroup v-if="activeGroups.length > 0" :group v-for="group of activeGroups" :key="group.id" />
+          <WishlistGroup :groups="list.groups" v-if="activeGroups.length > 0" :group v-for="group of activeGroups" :key="group.id" />
             <template v-else>
               <div class="groups no-groups">
                 There are no active groups available.
@@ -84,7 +84,7 @@ import { computed } from 'vue';
           <div class="groups-archived-header">
             <h2>Archived Groups</h2>
           </div>
-          <WishlistGroup v-if="archivedGroups.length > 0" :group v-for="group of archivedGroups" :key="group.id" />
+          <WishlistGroup :groups="list.groups" v-if="archivedGroups.length > 0" :group v-for="group of archivedGroups" :key="group.id" />
           <template v-else>
             <div class="groups no-groups">
               There are no archived groups available.

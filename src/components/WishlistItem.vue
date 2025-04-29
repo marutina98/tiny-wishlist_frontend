@@ -9,6 +9,7 @@
 
   import type IItem from '@/interfaces/item.interface';
   import type IAuth from '@/interfaces/auth.interface';
+  import type IGroup from '@/interfaces/group.interface';
 
   const auth = inject('auth') as IAuth;
   const toast = useToast();
@@ -17,10 +18,16 @@
     item: {
       type: Object,
       required: true
+    },
+    groups: {
+      type: Array,
+      required: true,
     }
   });
 
   const item = computed(() => props.item as IItem);
+  const groups = computed(() => props.groups as IGroup[]);
+
   const css = computed(() => {
     const thumbnail = props.item.thumbnail ?? SHelpers.getPlaceholderImage();
     return {
@@ -161,6 +168,8 @@
   };
   
   const editItem = () => {
+
+    console.log(groups.value);
 
     console.log('edit');
 
