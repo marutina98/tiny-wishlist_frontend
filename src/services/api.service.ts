@@ -65,6 +65,14 @@ class SApi {
     });
   }
 
+  public async deleteGroup(id: string, token: string) {
+    return await this.getRequest({
+      apiURL: `${this.baseURL}/group/${id}`,
+      method: 'DELETE',
+      token: token,
+    });
+  }
+
   // Item
 
   public async putItem(data: IRequestPutItem, token: string) {

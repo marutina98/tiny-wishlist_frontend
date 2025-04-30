@@ -24,13 +24,15 @@
     }
   });
 
-  const open = ref(false);
+  const openModal = ref(false);
+  const openCollapsible = ref(false);
+
   const group = computed(() => props.group as IGroup);
 
   const toast = useToast();
   
   const toggleCollapsible = () => {
-    open.value = !open.value;
+    openCollapsible.value = !openCollapsible.value;
   }
 
   const changeStatus = async (id: string) => {
@@ -64,9 +66,43 @@
     }
 
   }
+  
+  const toggleModal = () => {
+    openModal.value = !openModal.value;
+  }
 
-  const deleteItem = (id: string) => {
-    console.log('delete item');
+  const deleteGroup = async (id: string) => {
+    
+    // Get token from auth
+    // Pass token to SApi
+    // delete group and close modal
+
+    const token = auth.getToken();
+
+    const request = await SApi.deleteGroup(id, token);
+
+    // show toast
+
+    if (request.ok) {
+
+      eventBusRefetch.emit(true);
+      
+      toast.add({
+        title: 'Group was deleted succesfully.',
+        color: 'success'
+      });
+
+    } else {
+
+      toast.add({
+        title: 'Group could not be deleted. Try again.',
+        color: 'error'
+      });
+
+    }
+
+    toggleModal();
+
   }
 
 </script>
@@ -88,11 +124,25 @@
       <UButton @click="changeStatus(group.id)"
                :label="group.archived ? 'Make Group Active' : 'Archive Group'" />
 
-      <UButton @click="deleteItem(group.id)" label="Delete" />
+      <UModal v-model:open="openModal">
+        <UButton icon="i-system-uicons:trash" color="error" />
+        <template #content>
+          <div class="modal">
+            <div class="modal-content">
+              Do you want to delete this group ?
+            </div>
+            <USeparator />
+            <div class="modal-buttons">
+              <UButton color="success" label="Yes" @click="deleteGroup(group.id)" />
+              <UButton color="error" label="No" @click="toggleModal" />
+            </div>
+          </div>
+        </template>
+      </UModal>
 
     </div>
 
-    <UCollapsible v-model:open="open">
+    <UCollapsible v-model:open="openCollapsible">
       <template #content>
         <template v-if="group.items.length > 0">
           <div class="items">
@@ -125,6 +175,19 @@
 
   .items.no-items {
     @apply text-center text-sm p-2;
+  }
+  
+  .modal-content,
+  .modal-buttons {
+    @apply p-2;
+  }
+
+  .modal-buttons {
+    @apply flex flex-row gap-2 justify-center;
+  }
+
+  .modal-form-wrapper {
+    @apply flex flex-col items-center p-4;
   }
 
 </style>
