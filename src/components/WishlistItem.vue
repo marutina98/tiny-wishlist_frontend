@@ -64,28 +64,34 @@
     groupId: '',
   });
 
-  // @todo: complete schema
-
   const editSchema = v.object({
-    title: v.pipe(v.string()),
-    description: v.pipe(v.string()),
+    title: v.pipe(
+      v.string('Title must be a string.')
+    ),
+    description: v.pipe(
+      v.string('Description must be a string.')
+    ),
     thumbnail: v.pipe(
-      v.file()
+      v.file('Please select an image file.'),
+      v.mimeType(['image/jpeg', 'image/png'], 'Please select a JPEG or PNG file.'),
+      v.maxSize(1024 * 1024 * 2, 'Please select a file smaller than 2 MB.'),
     ),
     url: v.pipe(
-      v.string(),
-      v.url(),
+      v.string('URL must be a string.'),
+      v.url('URL is not a valid url.'),
     ),
-    quantity: v.pipe(v.number()),
+    quantity: v.pipe(
+      v.number('Quantity must be a number.')
+    ),
     price: v.pipe(
-      v.number(),
+      v.number('Price must be  number.'),
       v.minValue(0),
       v.transform(value => parseFloat(value.toFixed(2)))
     ),
     archived: v.pipe(v.boolean()),
     reserved: v.pipe(v.boolean()),
     groupId: v.pipe(v.string())
-  })
+  });
 
   // Modal Status
 

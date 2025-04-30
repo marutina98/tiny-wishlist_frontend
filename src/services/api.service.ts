@@ -57,6 +57,10 @@ class SApi {
 
   // Group
 
+  public async createGroup() {
+    // @todo: create group
+  }
+
   public async putGroupArchivalStatus(id: string, token: string) {
     return await this.getRequest({
       apiURL: `${this.baseURL}/group/${id}/archival`,
@@ -74,6 +78,10 @@ class SApi {
   }
 
   // Item
+  
+  public async createItem() {
+    // @todo: create item
+  }
 
   public async putItem(data: IRequestPutItem, token: string) {
     return await this.getRequest({
