@@ -251,8 +251,6 @@
       }
     );
 
-    // @todo: eventBus
-
   }
 
 </script>
