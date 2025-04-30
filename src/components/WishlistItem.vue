@@ -64,6 +64,8 @@
     groupId: '',
   });
 
+  // @todo: complete schema
+
   const editSchema = v.object({
     title: v.pipe(v.string()),
     description: v.pipe(v.string()),

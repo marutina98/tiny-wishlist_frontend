@@ -1,7 +1,14 @@
 <script setup lang="ts">
 
+  import { computed, ref, inject } from 'vue';
+
   import type IGroup from '@/interfaces/group.interface';
-  import { computed, ref } from 'vue';
+  import type IAuth from '@/interfaces/auth.interface';
+
+  import SApi from '@/services/api.service';
+  import eventBusRefetch from '@/services/event-bus-refetch.service';
+
+  const auth = inject('auth') as IAuth;
 
   // I need to pass the groups of the list to the props
   // to then pass it to wishlistItem for the update
@@ -19,13 +26,43 @@
 
   const open = ref(false);
   const group = computed(() => props.group as IGroup);
+
+  const toast = useToast();
   
   const toggleCollapsible = () => {
     open.value = !open.value;
   }
 
-  const changeStatus = (id: string) => {
-    console.log('change status');
+  const changeStatus = async (id: string) => {
+    
+    // Get token from auth
+    // Pass token to SApi
+    // update archival status
+
+    const token = auth.getToken();
+
+    const request = await SApi.putGroupArchivalStatus(id, token);
+
+    // show toast
+
+    if (request.ok) {
+
+      eventBusRefetch.emit(true);
+      
+      toast.add({
+        title: 'The status of the group was updated succesfully.',
+        color: 'success'
+      });
+
+    } else {
+
+      toast.add({
+        title: 'The status of the group could not be updated. Try again.',
+        color: 'error'
+      });
+
+    }
+
   }
 
   const deleteItem = (id: string) => {

@@ -8,6 +8,8 @@ class SApi {
 
   private baseURL: string = 'http://localhost:3000';
 
+  // Auth
+
   public async register(body: IRequestRegister) {
     return await this.getRequest({
       apiURL: `${this.baseURL}/auth/register`,
@@ -24,6 +26,8 @@ class SApi {
     });
   }
 
+  // List
+
   public async getList(id: string, token: string) {
     return await this.getRequest({
       apiURL: `${this.baseURL}/list/${id}`,
@@ -31,6 +35,8 @@ class SApi {
       token: token,
     });
   }
+
+  // User
 
   public async getAuthenticatedUser(token: string) {
     return await this.getRequest({
@@ -49,6 +55,18 @@ class SApi {
     });
   }
 
+  // Group
+
+  public async putGroupArchivalStatus(id: string, token: string) {
+    return await this.getRequest({
+      apiURL: `${this.baseURL}/group/${id}/archival`,
+      method: 'PUT',
+      token: token,
+    });
+  }
+
+  // Item
+
   public async putItem(data: IRequestPutItem, token: string) {
     return await this.getRequest({
       apiURL: `${this.baseURL}/item/${data.id}`,
@@ -65,6 +83,8 @@ class SApi {
       token: token,
     });
   }
+
+  // Request
 
   public getRequest(requestConfig: IRequestConfig) {
 
