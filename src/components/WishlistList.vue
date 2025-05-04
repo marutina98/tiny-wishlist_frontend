@@ -59,6 +59,15 @@ import { computed } from 'vue';
           <!-- @todo: create a item form -->
         </template>
       </UModal>
+
+      <UModal>
+        <UButton color="error" icon="i-system-uicons:trash" label="Delete List" />
+
+        <template #content>
+          <!-- @todo: delete list -->
+        </template>
+      </UModal>
+      
     </div>
   
     <div :class="{ groups: true, 'no-groups': list.groups.length <= 0 }">
