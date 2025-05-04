@@ -2,7 +2,7 @@
   
   import * as v from 'valibot';
 
-  import { computed, inject, reactive, ref } from 'vue';
+  import { computed, inject, reactive, ref, toRaw } from 'vue';
   
   import type IAuth from '@/interfaces/auth.interface';
   import type IGroup from '@/interfaces/group.interface';
@@ -11,6 +11,7 @@
   import SHelpers from '@/services/helpers.service';
 
   import eventBusRefetch from '@/services/event-bus-refetch.service';
+import type IRequestNewItem from '@/interfaces/request-new-item.interface';
 
   const auth = inject('auth') as IAuth;
   const toast = useToast();
@@ -33,11 +34,44 @@
   });
 
   const newItemState = reactive({
-
+    title: '',
+    description: '',
+    thumbnail: new File([], ''),
+    url: '',
+    quantity: 0,
+    price: 0,
+    archived: false,
+    reserved: false,
+    groupId: '',
   });
 
   const newItemSchema = v.object({
-
+    title: v.pipe(
+      v.string('Title must be a string.')
+    ),
+    description: v.pipe(
+      v.string('Description must be a string.')
+    ),
+    thumbnail: v.pipe(
+      v.file('Please select an image file.'),
+      v.mimeType(['image/jpeg', 'image/png'], 'Please select a JPEG or PNG file.'),
+      v.maxSize(1024 * 1024 * 2, 'Please select a file smaller than 2 MB.'),
+    ),
+    url: v.pipe(
+      v.string('URL must be a string.'),
+      v.url('URL is not a valid url.'),
+    ),
+    quantity: v.pipe(
+      v.number('Quantity must be a number.')
+    ),
+    price: v.pipe(
+      v.number('Price must be  number.'),
+      v.minValue(0),
+      v.transform(value => parseFloat(value.toFixed(2)))
+    ),
+    archived: v.pipe(v.boolean()),
+    reserved: v.pipe(v.boolean()),
+    groupId: v.pipe(v.string())
   });
 
   const list = computed(() => props.list);
@@ -63,9 +97,14 @@
   // Modals
 
   const openModalDelete = ref(false);
+  const openModalNewItem = ref(false);
 
   const toggleModalDelete = () => {
     openModalDelete.value = !openModalDelete.value;
+  }
+
+  const toggleModalNewItem = () => {
+    openModalNewItem.value = !openModalNewItem.value;
   }
 
   // Filter Groups by their archival status
@@ -123,6 +162,90 @@
 
   }
 
+  const handleThumbnailChange = (event: Event) => {
+
+    const target = event.target as HTMLInputElement;
+
+    if (target.files && target.files[0]) {
+      newItemState.thumbnail = target.files[0];
+    }
+
+    };
+
+  const submitNewItem = (userId: string) => {
+    
+    const file = newItemState.thumbnail;
+    const blob = new Blob([file], { type: file.type });
+
+    SHelpers.blobToDataURL(
+      blob,
+      async (dataUri: string) => {
+
+        // Remove empty elements before
+        // sending to backend
+
+        const state = Object.entries(toRaw(newItemState));
+
+        const newItemArr: [string, string|number|boolean][] = [];
+
+        for (let [k, v] of state) {
+          
+          // if the value is valid
+          // add to array
+
+          if (
+            (
+              typeof v === 'boolean' ||
+              (typeof v === 'string' && v.length > 0) ||
+              typeof v === 'number'
+            ) && k !== 'thumbnail'
+          ) {
+            newItemArr.push([k, v]);
+          }
+
+        }
+
+        // check that the datauri is an image and not an empty file
+
+        if (dataUri.length > 0 && !dataUri.startsWith('data:application/')) {
+          newItemArr.push(['thumbnail', dataUri]);
+        }
+
+        const newItem: IRequestNewItem = {
+          ...Object.fromEntries(newItemArr),
+        };
+
+        const token = auth.getToken();
+
+        const request = await SApi.createItem(newItem, token);
+
+        // show toast
+
+        if (request.ok) {
+
+          eventBusRefetch.emit(true);
+
+          toast.add({
+            title: 'Item was updated succesfully.',
+            color: 'success'
+          });
+
+          } else {
+
+          toast.add({
+            title: 'Item could not be updated. Try again.',
+            color: 'error'
+          });
+
+        }
+
+        toggleModalNewItem();
+
+      }
+    );
+    
+  }
+
 </script>
 
 <template>
@@ -142,11 +265,54 @@
         </template>
       </UModal>
 
-      <UModal>
+      <UModal v-model:open="openModalNewItem">
         <UButton icon="i-system-uicons:plus-circle" label="Add Item" />
 
         <template #content>
-          <!-- @todo: create a item form -->
+          <div class="modal-form-wrapper">
+            <UForm class="edit-form" :schema="newItemSchema" :state="newItemState" @submit.prevent="submitNewItem(list.userId)">
+
+              <UFormField label="Title" name="title">
+                <UInput v-model="newItemState.title" type="text"/>
+              </UFormField>
+
+              <UFormField label="Description" name="description">
+                <UInput v-model="newItemState.description" type="text"/>
+              </UFormField>
+
+              <UFormField label="Thumbnail" name="thumbnail">
+                <UInput @change="handleThumbnailChange" type="file" />
+              </UFormField>
+
+              <UFormField label="URL" name="url">
+                <UInput v-model="newItemState.url" type="text" />
+              </UFormField>
+
+              <UFormField label="Quantity" name="quantity">
+                <UInput v-model="newItemState.quantity" type="number" />
+              </UFormField>
+
+              <UFormField label="Price" name="price">
+                <UInput v-model="newItemState.price" type="number" />
+              </UFormField>
+
+              <UFormField label="Archival Status" name="archived">
+                <UCheckbox v-model="newItemState.archived" label="Archived" />
+              </UFormField>
+
+              <UFormField label="Reservation Status" name="reserved">
+                <UCheckbox v-model="newItemState.reserved" label="Reserved" />
+              </UFormField>
+
+              <UFormField label="Group" name="groupId">
+                <USelect v-model="newItemState.groupId" value-key="id" :items="selectGroups" />
+              </UFormField>
+
+              <UButton type="submit" label="Submit" />
+
+            </UForm>
+
+          </div>
         </template>
       </UModal>
 
@@ -239,7 +405,7 @@
   .groups-archived-header {
     @apply text-center mb-2 uppercase font-bold;
   }
-
+  
   .modal-content,
   .modal-buttons {
     @apply p-2;

@@ -4,6 +4,7 @@ import type IRequestRegister from '@/interfaces/request-register.interface';
 import type IRequestUpdateUser from '@/interfaces/request-update-user.interface';
 import type IRequestPutItem from '@/interfaces/request-put-item.interface';
 import type IRequestNewList from '@/interfaces/request-new-list.interface';
+import type IRequestNewItem from '@/interfaces/request-new-item.interface';
 
 class SApi {
 
@@ -97,8 +98,13 @@ class SApi {
 
   // Item
   
-  public async createItem() {
-    // @todo: create item
+  public async createItem(data: IRequestNewItem, token: string) {
+    return await this.getRequest({
+      apiURL: `${this.baseURL}/item`,
+      method: 'POST',
+      token: token,
+      body: JSON.stringify(data),
+    });
   }
 
   public async putItem(data: IRequestPutItem, token: string) {
