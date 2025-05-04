@@ -1,7 +1,17 @@
 <script setup lang="ts">
-import type IGroup from '@/interfaces/group.interface';
-import { computed } from 'vue';
+  
+  import { computed, inject, ref } from 'vue';
+  
+  import type IAuth from '@/interfaces/auth.interface';
+  import type IGroup from '@/interfaces/group.interface';
 
+  import SApi from '@/services/api.service';
+  import SHelpers from '@/services/helpers.service';
+
+  import eventBusRefetch from '@/services/event-bus-refetch.service';
+
+  const auth = inject('auth') as IAuth;
+  const toast = useToast();
 
   const props = defineProps({
     list: {
@@ -14,6 +24,14 @@ import { computed } from 'vue';
   const filteredGroups = computed(() => filterGroups(props.list.groups));
   const archivedGroups = computed(() => filteredGroups.value.archived);
   const activeGroups = computed(() => filteredGroups.value.active);
+
+  // Modals
+
+  const openModalDelete = ref(false);
+
+  const toggleModalDelete = () => {
+    openModalDelete.value = !openModalDelete.value;
+  }
 
   // Filter Groups by their archival status
   
@@ -33,6 +51,40 @@ import { computed } from 'vue';
     }
 
     return groups;
+
+  }
+
+  const deleteList = async (id: string) => {
+    
+    // Get token from auth
+    // Pass token to SApi
+    // delete list and close modal
+
+    const token = auth.getToken();
+
+    const request = await SApi.deleteList(id, token);
+
+    // show toast
+
+    if (request.ok) {
+
+      eventBusRefetch.emit(true);
+      
+      toast.add({
+        title: 'List was deleted succesfully.',
+        color: 'success'
+      });
+
+    } else {
+
+      toast.add({
+        title: 'List could not be deleted. Try again.',
+        color: 'error'
+      });
+
+    }
+
+    toggleModalDelete();
 
   }
 
@@ -60,14 +112,23 @@ import { computed } from 'vue';
         </template>
       </UModal>
 
-      <UModal>
+      <UModal v-model:open="openModalDelete">
         <UButton color="error" icon="i-system-uicons:trash" label="Delete List" />
 
         <template #content>
-          <!-- @todo: delete list -->
+          <div class="modal">
+            <div class="modal-content">
+              Do you want to delete this list ?
+            </div>
+            <USeparator />
+            <div class="modal-buttons">
+              <UButton color="success" label="Yes" @click="deleteList(list.id)" />
+              <UButton color="error" label="No" @click="toggleModalDelete" />
+            </div>
+          </div>
         </template>
       </UModal>
-      
+
     </div>
   
     <div :class="{ groups: true, 'no-groups': list.groups.length <= 0 }">
@@ -139,6 +200,19 @@ import { computed } from 'vue';
   .groups-active-header,
   .groups-archived-header {
     @apply text-center mb-2 uppercase font-bold;
+  }
+
+  .modal-content,
+  .modal-buttons {
+    @apply p-2;
+  }
+
+  .modal-buttons {
+    @apply flex flex-row gap-2 justify-center;
+  }
+
+  .modal-form-wrapper {
+    @apply flex flex-col items-center p-4;
   }
 
 </style>

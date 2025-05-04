@@ -122,6 +122,17 @@
       const response = await request.json() as IUser;
       const lists = response.lists ?? [];
       filterLists(lists);
+      
+      // @todo: if activeList is not null
+      // and active list does not exists in
+      // lists, make activeList null
+
+      if (activeList.value) {
+        const isActiveList = lists.find(l => l.id === activeList.value?.id);
+        if (!isActiveList) activeList.value = null;
+      }
+
+
     }
 
   });
