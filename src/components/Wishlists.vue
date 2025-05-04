@@ -9,13 +9,13 @@
   import type IUser from '@/interfaces/user.interface';
   import type IList from '@/interfaces/list.interface';
   import type IAuth from '@/interfaces/auth.interface';
+  import type IPriority from '@/interfaces/priority.interface';
 
   import WishlistList from './WishlistList.vue';
 
   import SApi from '@/services/api.service';
 
   import eventBusRefetch from '@/services/event-bus-refetch.service';
-import type IPriority from '@/interfaces/priority.interface';
 
   const auth = inject('auth') as IAuth;
 
@@ -26,38 +26,23 @@ import type IPriority from '@/interfaces/priority.interface';
     }
   });
 
+  const user = computed(() => props.user as IUser);
   const lists = computed(() => (props.user as IUser).lists as IList[]);
 
   // Form: Create a New List
 
-  /*
-
-  id: string,
-    title: string,
-    description: string,
-    thumbnail: string,
-    archived: boolean,
-    private: boolean,
-    userId: string,
-    priorityId: number,
-    priority: IPriority,
-    groups: IGroup[],
-    user: IUser,
-
-    */
-
-  const priorities: IPriority[] = [
+  const priorities = [
     {
       id: 1,
-      title: 'Low',
+      label: 'Low',
     },
     {
       id: 2,
-      title: 'Medium',
+      label: 'Medium',
     },
     {
       id: 3,
-      title: 'High',
+      label: 'High',
     }
   ];
 
@@ -86,6 +71,8 @@ import type IPriority from '@/interfaces/priority.interface';
     reserved: v.pipe(v.boolean()),
     priorityId: v.pipe(v.number())
   });
+
+  const openList = ref(false);
 
   // Change Active List on Select
 
@@ -225,6 +212,23 @@ import type IPriority from '@/interfaces/priority.interface';
 
   }
 
+  const handleThumbnailChange = (event: Event) => {
+
+    const target = event.target as HTMLInputElement;
+
+    if (target.files && target.files[0]) {
+      listState.thumbnail = target.files[0];
+    }
+
+  };
+
+  const createList = (user: IUser) => {
+
+    console.log(user);
+    console.log('hello');
+
+  }
+
 </script>
 
 <template>
@@ -238,11 +242,40 @@ import type IPriority from '@/interfaces/priority.interface';
       <!-- Create a List modal -->
 
       <div class="wishlist-new-list">
-        <UModal>
+        <UModal v-model:open="openList">
           <UButton icon="i-system-uicons:plus-circle" label="New List"/>
 
           <template #content>
-            <!-- @todo: new list form -->
+
+            <div class="modal-form-wrapper">
+
+              <UForm class="list-form" :schema="listSchema" :state="listState" @submit.prevent="">
+
+                <UFormField label="Title" name="title">
+                  <UInput v-model="listState.title" type="text"/>
+                </UFormField>
+
+                <UFormField label="Description" name="description">
+                  <UInput v-model="listState.description" type="text"/>
+                </UFormField>
+
+                <UFormField label="Thumbnail" name="thumbnail">
+                  <UInput @change="handleThumbnailChange" type="file" />
+                </UFormField>
+
+                <UFormField label="Private Status" name="private">
+                  <UCheckbox v-model="listState.private" label="private" />
+                </UFormField>
+
+                <UFormField label="Priority" name="priorityId">
+                  <USelect v-model="listState.priorityId" value-key="id" :items="priorities" />
+                </UFormField>
+
+                <UButton @click="createList(user)" type="submit" label="Submit" />
+
+              </UForm>
+            </div>
+
           </template>
         </UModal>
       </div>
@@ -274,6 +307,14 @@ import type IPriority from '@/interfaces/priority.interface';
 
   .wishlist-new-list {
     @apply flex items-center justify-center;
+  }
+
+  .modal-form-wrapper {
+    @apply flex flex-col items-center p-4;
+  }
+
+  .list-form {
+    @apply flex flex-col gap-2;
   }
 
 </style>
