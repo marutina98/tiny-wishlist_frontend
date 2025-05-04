@@ -1,6 +1,8 @@
 <script setup lang="ts">
   
-  import { computed, inject, ref } from 'vue';
+  import * as v from 'valibot';
+
+  import { computed, inject, reactive, ref } from 'vue';
   
   import type IAuth from '@/interfaces/auth.interface';
   import type IGroup from '@/interfaces/group.interface';
@@ -20,10 +22,43 @@
     }
   });
 
+  // Forms
+
+  const newGroupState = reactive({
+    
+  });
+
+  const newGroupSchema = v.object({
+
+  });
+
+  const newItemState = reactive({
+
+  });
+
+  const newItemSchema = v.object({
+
+  });
+
   const list = computed(() => props.list);
   const filteredGroups = computed(() => filterGroups(props.list.groups));
   const archivedGroups = computed(() => filteredGroups.value.archived);
   const activeGroups = computed(() => filteredGroups.value.active);
+
+  // Groups for Select/Options
+
+  const selectGroups = computed(() => {
+
+    const _groups = props.list.groups as IGroup[];
+
+    _groups.map((g: IGroup) => {
+      g.label = g.title;
+      return g;
+    });
+
+    return _groups;
+
+  });
 
   // Modals
 
@@ -101,6 +136,9 @@
 
         <template #content>
           <!-- @todo: create a group form -->
+
+
+
         </template>
       </UModal>
 
