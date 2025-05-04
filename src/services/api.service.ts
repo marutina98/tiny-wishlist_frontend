@@ -3,6 +3,7 @@ import type IRequestConfig from '@/interfaces/request-config.interface';
 import type IRequestRegister from '@/interfaces/request-register.interface';
 import type IRequestUpdateUser from '@/interfaces/request-update-user.interface';
 import type IRequestPutItem from '@/interfaces/request-put-item.interface';
+import type IRequestNewList from '@/interfaces/request-new-list.interface';
 
 class SApi {
 
@@ -28,10 +29,27 @@ class SApi {
 
   // List
 
+  public async createList(body: IRequestNewList, token: string) {
+    return await this.getRequest({
+      apiURL: `${this.baseURL}/list/`,
+      method: 'POST',
+      token: token,
+      body: JSON.stringify(body),
+    });
+  }
+
   public async getList(id: string, token: string) {
     return await this.getRequest({
       apiURL: `${this.baseURL}/list/${id}`,
       method: 'GET',
+      token: token,
+    });
+  }
+
+  public async deleteList(id: string, token: string) {
+    return await this.getRequest({
+      apiURL: `${this.baseURL}/list/${id}`,
+      method: 'DELETE',
       token: token,
     });
   }

@@ -2,22 +2,24 @@
 
   import * as v from 'valibot';
 
-  import { computed, onBeforeMount, ref, inject, reactive } from 'vue';
+  import { computed, onBeforeMount, ref, inject, reactive, toRaw } from 'vue';
 
   import type { Ref } from 'vue';
   import type { TreeItem } from '@nuxt/ui';
   import type IUser from '@/interfaces/user.interface';
   import type IList from '@/interfaces/list.interface';
   import type IAuth from '@/interfaces/auth.interface';
-  import type IPriority from '@/interfaces/priority.interface';
 
   import WishlistList from './WishlistList.vue';
 
   import SApi from '@/services/api.service';
+  import SHelpers from '@/services/helpers.service';
 
   import eventBusRefetch from '@/services/event-bus-refetch.service';
+  import type IRequestNewList from '@/interfaces/request-new-list.interface';
 
   const auth = inject('auth') as IAuth;
+  const toast = useToast();
 
   const props = defineProps({
     user: {
@@ -28,6 +30,12 @@
 
   const user = computed(() => props.user as IUser);
   const lists = computed(() => (props.user as IUser).lists as IList[]);
+
+  const openList = ref(false);
+
+  const toggleModalList = () => {
+    openList.value = !openList.value;
+  }
 
   // Form: Create a New List
 
@@ -72,7 +80,6 @@
     priorityId: v.pipe(v.number())
   });
 
-  const openList = ref(false);
 
   // Change Active List on Select
 
@@ -223,9 +230,82 @@
   };
 
   const createList = (user: IUser) => {
+    
+    const file = listState.thumbnail;
+    const blob = new Blob([file], { type: file.type });
 
-    console.log(user);
-    console.log('hello');
+    SHelpers.blobToDataURL(
+      blob,
+      async (dataUri: string) => {
+
+        // Remove empty elements before
+        // sending to backend
+
+        const state = Object.entries(toRaw(listState));
+
+        const newListArr: [string, string|number|boolean][] = [];
+
+        for (let [k, v] of state) {
+          
+          // if the value is valid
+          // add to array
+
+          if (
+            (
+              typeof v === 'boolean' ||
+              (typeof v === 'string' && v.length > 0) ||
+              typeof v === 'number'
+            ) && k !== 'thumbnail'
+          ) {
+            newListArr.push([k, v]);
+          }
+
+        }
+
+        // check that the datauri is an image and not an empty file
+
+        if (dataUri.length > 0 && !dataUri.startsWith('data:application/')) {
+          newListArr.push(['thumbnail', dataUri]);
+        }
+
+        const newList: IRequestNewList = {
+          userId: user.id,
+          title: listState.title,
+          description: listState.description,
+          thumbnail: dataUri,
+          archived: listState.archived,
+          private: listState.private,
+          priorityId: listState.priorityId,
+        };
+
+        const token = auth.getToken();
+
+        const request = await SApi.createList(newList, token);
+
+        // show toast
+
+        if (request.ok) {
+
+          eventBusRefetch.emit(true);
+
+          toast.add({
+            title: 'List was created succesfully.',
+            color: 'success'
+          });
+
+          } else {
+
+          toast.add({
+            title: 'List could not be created. Try again.',
+            color: 'error'
+          });
+
+        }
+
+        toggleModalList();
+
+      }
+    );
 
   }
 
@@ -249,7 +329,7 @@
 
             <div class="modal-form-wrapper">
 
-              <UForm class="list-form" :schema="listSchema" :state="listState" @submit.prevent="">
+              <UForm class="list-form" :schema="listSchema" :state="listState">
 
                 <UFormField label="Title" name="title">
                   <UInput v-model="listState.title" type="text"/>
