@@ -230,7 +230,7 @@
   };
 
   const createList = (user: IUser) => {
-    
+
     const file = listState.thumbnail;
     const blob = new Blob([file], { type: file.type });
 
@@ -313,6 +313,15 @@
 
 <template>
 
+  <UCard class="wishlist-thumbnail-wrapper" v-if="activeList">
+
+    <div
+      class="wishlist-thumbnail"
+      :style="{ backgroundImage: 'url(' + activeList.thumbnail + ')' }"
+    ></div>
+
+  </UCard>
+
   <div class="wishlist-wrapper">
 
     <div class="wishlist-left">
@@ -372,6 +381,17 @@
 <style scoped>
 
   @reference 'tailwindcss';
+
+  .wishlist-thumbnail-wrapper {
+    @apply mb-4;
+  }
+
+  .wishlist-thumbnail {
+    @apply w-full;
+    background-position: center center;
+    background-size: cover;
+    height: 300px;
+  }
 
   .wishlist-wrapper {
     @apply flex flex-row gap-2;
