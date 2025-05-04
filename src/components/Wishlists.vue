@@ -1,6 +1,8 @@
 <script setup lang="ts">
 
-  import { computed, onBeforeMount, ref, inject } from 'vue';
+  import * as v from 'valibot';
+
+  import { computed, onBeforeMount, ref, inject, reactive } from 'vue';
 
   import type { Ref } from 'vue';
   import type { TreeItem } from '@nuxt/ui';
@@ -13,6 +15,7 @@
   import SApi from '@/services/api.service';
 
   import eventBusRefetch from '@/services/event-bus-refetch.service';
+import type IPriority from '@/interfaces/priority.interface';
 
   const auth = inject('auth') as IAuth;
 
@@ -23,7 +26,66 @@
     }
   });
 
-  const lists = computed(() => (props.user as IUser).lists);
+  const lists = computed(() => (props.user as IUser).lists as IList[]);
+
+  // Form: Create a New List
+
+  /*
+
+  id: string,
+    title: string,
+    description: string,
+    thumbnail: string,
+    archived: boolean,
+    private: boolean,
+    userId: string,
+    priorityId: number,
+    priority: IPriority,
+    groups: IGroup[],
+    user: IUser,
+
+    */
+
+  const priorities: IPriority[] = [
+    {
+      id: 1,
+      title: 'Low',
+    },
+    {
+      id: 2,
+      title: 'Medium',
+    },
+    {
+      id: 3,
+      title: 'High',
+    }
+  ];
+
+  const listState = reactive({
+    title: '',
+    description: '',
+    thumbnail: new File([], ''),
+    archived: false,
+    private: false,
+    priorityId: 1,
+  });
+
+  const listSchema = v.object({
+    title: v.pipe(
+      v.string('Title must be a string.')
+    ),
+    description: v.pipe(
+      v.string('Description must be a string.')
+    ),
+    thumbnail: v.pipe(
+      v.file('Please select an image file.'),
+      v.mimeType(['image/jpeg', 'image/png'], 'Please select a JPEG or PNG file.'),
+      v.maxSize(1024 * 1024 * 2, 'Please select a file smaller than 2 MB.'),
+    ),
+    archived: v.pipe(v.boolean()),
+    reserved: v.pipe(v.boolean()),
+    priorityId: v.pipe(v.number())
+  });
 
   // Change Active List on Select
 
