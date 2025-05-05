@@ -464,31 +464,33 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
 
         <template #content>
 
-          <UForm class="list-form" :schema="editListSchema" :state="editListState">
+          <div class="modal-form-wrapper">
+            <UForm class="list-form" :schema="editListSchema" :state="editListState">
 
-            <UFormField label="Title" name="title">
-              <UInput v-model="editListState.title" type="text"/>
-            </UFormField>
+              <UFormField label="Title" name="title">
+                <UInput v-model="editListState.title" type="text"/>
+              </UFormField>
 
-            <UFormField label="Description" name="description">
-              <UInput v-model="editListState.description" type="text"/>
-            </UFormField>
+              <UFormField label="Description" name="description">
+                <UInput v-model="editListState.description" type="text"/>
+              </UFormField>
 
-            <UFormField label="Thumbnail" name="thumbnail">
-              <UInput @change="handleThumbnailChange" type="file" />
-            </UFormField>
+              <UFormField label="Thumbnail" name="thumbnail">
+                <UInput @change="handleThumbnailChange" type="file" />
+              </UFormField>
 
-            <UFormField label="Private Status" name="private">
-              <UCheckbox v-model="editListState.private" label="private" />
-            </UFormField>
+              <UFormField label="Private Status" name="private">
+                <UCheckbox v-model="editListState.private" label="private" />
+              </UFormField>
 
-            <UFormField label="Priority" name="priorityId">
-              <USelect v-model="editListState.priorityId" value-key="id" :items="priorities" />
-            </UFormField>
+              <UFormField label="Priority" name="priorityId">
+                <USelect v-model="editListState.priorityId" value-key="id" :items="priorities" />
+              </UFormField>
 
-            <UButton @click="submitEditList" type="submit" label="Submit" />
+              <UButton @click="submitEditList" type="submit" label="Submit" />
 
-          </UForm>
+            </UForm>
+          </div>
 
         </template>
       </UModal>
@@ -605,6 +607,10 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
 
   .modal-form-wrapper {
     @apply flex flex-col items-center p-4;
+  }
+
+  .list-form {
+    @apply flex flex-col gap-2;
   }
 
 </style>
