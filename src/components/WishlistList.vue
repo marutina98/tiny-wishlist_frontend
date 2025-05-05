@@ -463,7 +463,6 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
         <UButton icon="i-system-uicons:pen" label="Edit List" />
 
         <template #content>
-          <!-- @todo: create edit list form -->
 
           <UForm class="list-form" :schema="editListSchema" :state="editListState">
 
