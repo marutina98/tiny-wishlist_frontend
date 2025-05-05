@@ -130,6 +130,13 @@
       <UButton @click="changeStatus(group.id)"
                :label="group.archived ? 'Make Group Active' : 'Archive Group'" />
 
+      <UModal v-model:open="openModalEdit">
+        <UButton icon="i-system-uicons:pen" color="success" />
+        <template #content>
+          Hello
+        </template>
+      </UModal>
+
       <UModal v-model:open="openModalDelete">
         <UButton icon="i-system-uicons:trash" color="error" />
         <template #content>
