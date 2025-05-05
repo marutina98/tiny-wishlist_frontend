@@ -371,6 +371,8 @@
   .item-header {
     @apply flex flex-col justify-between;
     background-image: var(--background-image);
+    background-position: center center;
+    background-size: contain;
     height: 300px;
   }
 

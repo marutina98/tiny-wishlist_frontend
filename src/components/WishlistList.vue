@@ -2,7 +2,7 @@
   
   import * as v from 'valibot';
 
-  import { computed, inject, reactive, ref, toRaw } from 'vue';
+  import { computed, inject, reactive, ref, toRaw, onBeforeMount } from 'vue';
   
   import type IAuth from '@/interfaces/auth.interface';
   import type IGroup from '@/interfaces/group.interface';
@@ -11,7 +11,9 @@
   import SHelpers from '@/services/helpers.service';
 
   import eventBusRefetch from '@/services/event-bus-refetch.service';
-import type IRequestNewItem from '@/interfaces/request-new-item.interface';
+  import type IRequestNewItem from '@/interfaces/request-new-item.interface';
+import type IUser from '@/interfaces/user.interface';
+import type IRequestPutList from '@/interfaces/request-put-list.interface';
 
   const auth = inject('auth') as IAuth;
   const toast = useToast();
@@ -24,14 +26,6 @@ import type IRequestNewItem from '@/interfaces/request-new-item.interface';
   });
 
   // Forms
-
-  const newGroupState = reactive({
-    
-  });
-
-  const newGroupSchema = v.object({
-
-  });
 
   const newItemState = reactive({
     title: '',
@@ -74,6 +68,63 @@ import type IRequestNewItem from '@/interfaces/request-new-item.interface';
     groupId: v.pipe(v.string())
   });
 
+  const newGroupState = reactive({
+    
+  });
+
+  const newGroupSchema = v.object({
+
+  });
+
+  const priorities = [
+    {
+      id: 1,
+      label: 'Low',
+    },
+    {
+      id: 2,
+      label: 'Medium',
+    },
+    {
+      id: 3,
+      label: 'High',
+    }
+  ];
+
+  const editListState = reactive({
+    title: '',
+    description: '',
+    thumbnail: new File([], ''),
+    private: false,
+    priorityId: 1,
+  });
+
+  const editListSchema = v.object({
+    title: v.pipe(
+      v.nullable(
+        v.string('Title must be a string.')
+      )
+    ),
+    description: v.pipe(
+      v.nullable(
+        v.string('Description must be a string.')
+      )
+    ),
+    thumbnail: v.pipe(
+      v.optional(
+        v.pipe(
+          v.file(),
+          v.mimeType(['image/jpeg', 'image/png'], 'Please select a JPEG or PNG file.'),
+          v.maxSize(1024 * 1024 * 2, 'Please select a file smaller than 2 MB.')
+        )
+      )
+    ),
+    reserved: v.pipe(v.boolean()),
+    priorityId: v.pipe(v.number())
+  });
+
+  // Computed Elements
+
   const list = computed(() => props.list);
   const filteredGroups = computed(() => filterGroups(props.list.groups));
   const archivedGroups = computed(() => filteredGroups.value.archived);
@@ -98,6 +149,7 @@ import type IRequestNewItem from '@/interfaces/request-new-item.interface';
 
   const openModalDelete = ref(false);
   const openModalNewItem = ref(false);
+  const openModalEdit = ref(false);
 
   const toggleModalDelete = () => {
     openModalDelete.value = !openModalDelete.value;
@@ -105,6 +157,10 @@ import type IRequestNewItem from '@/interfaces/request-new-item.interface';
 
   const toggleModalNewItem = () => {
     openModalNewItem.value = !openModalNewItem.value;
+  }
+
+  const toggleModalEdit = () => {
+    openModalEdit.value = !openModalEdit.value;
   }
 
   // Filter Groups by their archival status
@@ -246,6 +302,104 @@ import type IRequestNewItem from '@/interfaces/request-new-item.interface';
     
   }
 
+  const submitEditList = () => {
+
+    const file = editListState.thumbnail;
+    const blob = new Blob([file], { type: file.type });
+
+    SHelpers.blobToDataURL(
+      blob,
+      async (dataUri: string) => {
+
+        // Remove empty elements before
+        // sending to backend
+
+        const state = Object.entries(toRaw(editListState));
+
+        const editListArr: [string, string|number|boolean][] = [];
+
+        for (let [k, v] of state) {
+          
+          // if the value is valid
+          // add to array
+
+          if (
+            (
+              typeof v === 'boolean' ||
+              (typeof v === 'string' && v.length > 0) ||
+              typeof v === 'number'
+            ) && k !== 'thumbnail'
+          ) {
+            editListArr.push([k, v]);
+          }
+
+        }
+
+        // check that the datauri is an image and not an empty file
+
+        if (dataUri.length > 0 && !dataUri.startsWith('data:application/')) {
+          editListArr.push(['thumbnail', dataUri]);
+        }
+
+        const editList: IRequestPutList = {
+          id: list.value.id,
+          userId: list.value.userId,
+          title: editListState.title,
+          description: editListState.description,
+          thumbnail: dataUri,
+          private: editListState.private,
+          priorityId: editListState.priorityId,
+        };
+
+        const token = auth.getToken();
+
+        const request = await SApi.putList(editList, token);
+
+        // show toast
+
+        if (request.ok) {
+
+          eventBusRefetch.emit(true);
+
+          toast.add({
+            title: 'List was update succesfully.',
+            color: 'success'
+          });
+
+          } else {
+
+          toast.add({
+            title: 'List could not be updated. Try again.',
+            color: 'error'
+          });
+
+        }
+
+        toggleModalEdit();
+
+      }
+    );
+
+  }
+
+  // Set editListSchema onBeforeMount
+
+  onBeforeMount(async () => {
+
+    editListState.title = list.value.title;
+    editListState.description = list.value.description;
+    editListState.private = list.value.private;
+    editListState.priorityId = list.value.priorityId;
+
+    const blob = await SHelpers.dataURLToBlob(list.value.thumbnail);
+    
+    if (blob) {
+      const thumbnailFile = new File([blob], '');
+      editListState.thumbnail = thumbnailFile;
+    }
+
+  });
+
 </script>
 
 <template>
@@ -253,17 +407,6 @@ import type IRequestNewItem from '@/interfaces/request-new-item.interface';
   <div class="list">
 
     <div class="settings">
-
-      <UModal>
-        <UButton icon="i-system-uicons:plus-circle" label="Create Group" />
-
-        <template #content>
-          <!-- @todo: create a group form -->
-
-
-
-        </template>
-      </UModal>
 
       <UModal v-model:open="openModalNewItem">
         <UButton icon="i-system-uicons:plus-circle" label="Add Item" />
@@ -316,6 +459,41 @@ import type IRequestNewItem from '@/interfaces/request-new-item.interface';
         </template>
       </UModal>
 
+      <UModal v-model:open="openModalEdit">
+        <UButton icon="i-system-uicons:pen" label="Edit List" />
+
+        <template #content>
+          <!-- @todo: create edit list form -->
+
+          <UForm class="list-form" :schema="editListSchema" :state="editListState">
+
+            <UFormField label="Title" name="title">
+              <UInput v-model="editListState.title" type="text"/>
+            </UFormField>
+
+            <UFormField label="Description" name="description">
+              <UInput v-model="editListState.description" type="text"/>
+            </UFormField>
+
+            <UFormField label="Thumbnail" name="thumbnail">
+              <UInput @change="handleThumbnailChange" type="file" />
+            </UFormField>
+
+            <UFormField label="Private Status" name="private">
+              <UCheckbox v-model="editListState.private" label="private" />
+            </UFormField>
+
+            <UFormField label="Priority" name="priorityId">
+              <USelect v-model="editListState.priorityId" value-key="id" :items="priorities" />
+            </UFormField>
+
+            <UButton @click="submitEditList" type="submit" label="Submit" />
+
+          </UForm>
+
+        </template>
+      </UModal>
+
       <UModal v-model:open="openModalDelete">
         <UButton color="error" icon="i-system-uicons:trash" label="Delete List" />
 
@@ -330,6 +508,17 @@ import type IRequestNewItem from '@/interfaces/request-new-item.interface';
               <UButton color="error" label="No" @click="toggleModalDelete" />
             </div>
           </div>
+        </template>
+      </UModal>
+
+      <UModal>
+        <UButton icon="i-system-uicons:plus-circle" label="Create Group" />
+
+        <template #content>
+          <!-- @todo: create a group form -->
+
+
+
         </template>
       </UModal>
 
