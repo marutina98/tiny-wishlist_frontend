@@ -110,13 +110,11 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
         v.string('Description must be a string.')
       )
     ),
-    thumbnail: v.pipe(
-      v.optional(
-        v.pipe(
-          v.file(),
-          v.mimeType(['image/jpeg', 'image/png'], 'Please select a JPEG or PNG file.'),
-          v.maxSize(1024 * 1024 * 2, 'Please select a file smaller than 2 MB.')
-        )
+    thumbnail: v.optional(
+      v.pipe(
+        v.file(),
+        v.mimeType(['image/jpeg', 'image/png'], 'Please select a JPEG or PNG file.'),
+        v.maxSize(1024 * 1024 * 2, 'Please select a file smaller than 2 MB.')
       )
     ),
     reserved: v.pipe(v.boolean()),
@@ -218,7 +216,7 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
 
   }
 
-  const handleThumbnailChange = (event: Event) => {
+  const handleThumbnailChangeNewItem = (event: Event) => {
 
     const target = event.target as HTMLInputElement;
 
@@ -226,7 +224,17 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
       newItemState.thumbnail = target.files[0];
     }
 
-    };
+  };
+
+  const handleThumbnailChangeEditList = (event: Event) => {
+
+    const target = event.target as HTMLInputElement;
+
+    if (target.files && target.files[0]) {
+      editListState.thumbnail = target.files[0];
+    }
+
+  };
 
   const submitNewItem = (userId: string) => {
     
@@ -341,15 +349,23 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
           editListArr.push(['thumbnail', dataUri]);
         }
 
+        const data = Object.fromEntries(editListArr);
+
         const editList: IRequestPutList = {
           id: list.value.id,
           userId: list.value.userId,
           title: editListState.title,
           description: editListState.description,
-          thumbnail: dataUri,
           private: editListState.private,
           priorityId: editListState.priorityId,
+          thumbnail: list.value.thumbnail,
         };
+
+        if (data.thumbnail && typeof data.thumbnail === 'string') {
+          editList.thumbnail = data.thumbnail;
+        }
+
+        console.log(editList);
 
         const token = auth.getToken();
 
@@ -424,7 +440,7 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
               </UFormField>
 
               <UFormField label="Thumbnail" name="thumbnail">
-                <UInput @change="handleThumbnailChange" type="file" />
+                <UInput @change="handleThumbnailChangeNewItem" type="file" />
               </UFormField>
 
               <UFormField label="URL" name="url">
@@ -476,7 +492,7 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
               </UFormField>
 
               <UFormField label="Thumbnail" name="thumbnail">
-                <UInput @change="handleThumbnailChange" type="file" />
+                <UInput @change="handleThumbnailChangeEditList" type="file" />
               </UFormField>
 
               <UFormField label="Private Status" name="private">
