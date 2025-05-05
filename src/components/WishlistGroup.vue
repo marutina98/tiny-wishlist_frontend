@@ -196,15 +196,17 @@ import type IRequestPutGroup from '@/interfaces/request-put-group.interface';
       <UModal v-model:open="openModalEdit">
         <UButton icon="i-system-uicons:pen" color="success" />
         <template #content>
-          <UForm class="list-form" :schema :state @submit.prevent="putGroup">
+          <div class="modal-form-wrapper">
+            <UForm class="form" :schema :state @submit.prevent="putGroup">
 
-            <UFormField label="Title" name="title">
-              <UInput v-model="state.title" type="text"/>
-            </UFormField>
+              <UFormField label="Title" name="title">
+                <UInput v-model="state.title" type="text"/>
+              </UFormField>
 
-            <UButton type="submit" label="Submit" />
+              <UButton type="submit" label="Submit" />
 
-          </UForm>
+            </UForm>
+          </div>
         </template>
       </UModal>
 
@@ -272,6 +274,10 @@ import type IRequestPutGroup from '@/interfaces/request-put-group.interface';
 
   .modal-form-wrapper {
     @apply flex flex-col items-center p-4;
+  }
+
+  .form {
+    @apply flex flex-col gap-2;
   }
 
 </style>
