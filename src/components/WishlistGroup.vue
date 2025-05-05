@@ -24,12 +24,22 @@
     }
   });
 
-  const openModal = ref(false);
+  const openModalEdit = ref(false);
+  const openModalDelete = ref(false);
+
   const openCollapsible = ref(false);
 
   const group = computed(() => props.group as IGroup);
 
   const toast = useToast();
+  
+  const toggleModalEdit = () => {
+    openModalEdit.value = !openModalEdit.value;
+  }
+  
+  const toggleModalDelete = () => {
+    openModalDelete.value = !openModalDelete.value;
+  }
   
   const toggleCollapsible = () => {
     openCollapsible.value = !openCollapsible.value;
@@ -66,10 +76,6 @@
     }
 
   }
-  
-  const toggleModal = () => {
-    openModal.value = !openModal.value;
-  }
 
   const deleteGroup = async (id: string) => {
     
@@ -101,7 +107,7 @@
 
     }
 
-    toggleModal();
+    toggleModalDelete();
 
   }
 
@@ -124,7 +130,7 @@
       <UButton @click="changeStatus(group.id)"
                :label="group.archived ? 'Make Group Active' : 'Archive Group'" />
 
-      <UModal v-model:open="openModal">
+      <UModal v-model:open="openModalDelete">
         <UButton icon="i-system-uicons:trash" color="error" />
         <template #content>
           <div class="modal">
@@ -134,7 +140,7 @@
             <USeparator />
             <div class="modal-buttons">
               <UButton color="success" label="Yes" @click="deleteGroup(group.id)" />
-              <UButton color="error" label="No" @click="toggleModal" />
+              <UButton color="error" label="No" @click="toggleModalDelete" />
             </div>
           </div>
         </template>
