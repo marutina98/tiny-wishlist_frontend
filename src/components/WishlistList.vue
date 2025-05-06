@@ -14,6 +14,7 @@
   import type IRequestNewItem from '@/interfaces/request-new-item.interface';
 import type IUser from '@/interfaces/user.interface';
 import type IRequestPutList from '@/interfaces/request-put-list.interface';
+import type IRequestNewGroup from '@/interfaces/request-new-group.interface';
 
   const auth = inject('auth') as IAuth;
   const toast = useToast();
@@ -69,11 +70,14 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
   });
 
   const newGroupState = reactive({
-    
+    title: '',
   });
 
   const newGroupSchema = v.object({
-
+    title: v.pipe(
+      v.string('Title must be a string'),
+      v.minLength(3, 'Title must be at least 3 characters long.'),
+    )
   });
 
   const priorities = [
@@ -148,6 +152,7 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
   const openModalDelete = ref(false);
   const openModalNewItem = ref(false);
   const openModalEdit = ref(false);
+  const openModalGroup = ref(false);
 
   const toggleModalDelete = () => {
     openModalDelete.value = !openModalDelete.value;
@@ -159,6 +164,10 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
 
   const toggleModalEdit = () => {
     openModalEdit.value = !openModalEdit.value;
+  }
+
+  const toggleModalGroup = () => {
+    openModalGroup.value = !openModalGroup.value;
   }
 
   // Filter Groups by their archival status
@@ -398,6 +407,48 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
 
   }
 
+  const submitGroup = async (listId: string) => {
+    
+    // prepare data for group
+
+    const data: IRequestNewGroup = {
+      listId,
+      ...toRaw(newGroupState)
+    };
+
+    
+    // Get token from auth
+    // Pass token to SApi
+    // create list and close modal
+
+    const token = auth.getToken();
+
+    const request = await SApi.createGroup(data, token);
+
+    // show toast
+
+    if (request.ok) {
+
+      eventBusRefetch.emit(true);
+      
+      toast.add({
+        title: 'Group was created succesfully.',
+        color: 'success'
+      });
+
+    } else {
+
+      toast.add({
+        title: 'Group could not be created. Try again.',
+        color: 'error'
+      });
+
+    }
+
+    toggleModalGroup();
+
+  }
+
   // Set editListSchema onBeforeMount
 
   onBeforeMount(async () => {
@@ -528,13 +579,22 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
         </template>
       </UModal>
 
-      <UModal>
+      <UModal v-model:open="openModalGroup">
         <UButton icon="i-system-uicons:plus-circle" label="Create Group" />
 
         <template #content>
-          <!-- @todo: create a group form -->
 
+          <div class="modal-form-wrapper">
+            <UForm class="form" :schema="newGroupSchema" :state="newGroupState" @submit.prevent="submitGroup(list.id)">
 
+              <UFormField label="Title" name="title">
+                <UInput v-model="newGroupState.title" type="text"/>
+              </UFormField>
+
+              <UButton type="submit" label="Submit" />
+
+            </UForm>
+          </div>
 
         </template>
       </UModal>
@@ -542,8 +602,6 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
     </div>
   
     <div :class="{ groups: true, 'no-groups': list.groups.length <= 0 }">
-
-      <!-- @todo: when no public/archived groups are present, show message -->
 
       <template v-if="list.groups.length > 0">
         <div class="groups-active">
@@ -625,7 +683,8 @@ import type IRequestPutList from '@/interfaces/request-put-list.interface';
     @apply flex flex-col items-center p-4;
   }
 
-  .list-form {
+  .list-form,
+  .form {
     @apply flex flex-col gap-2;
   }
 

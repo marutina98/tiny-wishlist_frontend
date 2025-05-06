@@ -7,6 +7,7 @@ import type IRequestNewList from '@/interfaces/request-new-list.interface';
 import type IRequestNewItem from '@/interfaces/request-new-item.interface';
 import type IRequestPutList from '@/interfaces/request-put-list.interface';
 import type IRequestPutGroup from '@/interfaces/request-put-group.interface';
+import type IRequestNewGroup from '@/interfaces/request-new-group.interface';
 
 class SApi {
 
@@ -87,8 +88,13 @@ class SApi {
 
   // Group
 
-  public async createGroup() {
-    // @todo: create group
+  public async createGroup(body: IRequestNewGroup, token: string) {
+    return await this.getRequest({
+      apiURL: `${this.baseURL}/group`,
+      method: 'POST',
+      body: JSON.stringify(body),
+      token: token,
+    });
   }
 
   public async putGroup(body: IRequestPutGroup, token: string) {
