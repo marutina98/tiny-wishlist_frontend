@@ -14,29 +14,38 @@ import ErrorListView from '@/views/ErrorListView.vue';
 
 import { GIsUser } from '@/guards/is-user.guard';
 import { GIsGuest } from '@/guards/is-guest.guard';
-
 import type IAuth from '@/interfaces/auth.interface';
+import type IList from '@/interfaces/list.interface';
 
 const routes = [
 
   {
     path: '/:pathMatch(.*)*',
-    component: ErrorRedirect
+    component: ErrorRedirect,
   },
 
   {
     path: '/error/404',
     component: Error404View,
+    meta: {
+      title: '404 Error'
+    }
   },
 
   {
     path: '/error/list',
     component: ErrorListView,
+    meta: {
+      title: 'List Not Found'
+    }
   },
 
   {
     path: '/',
     component: HomeView,
+    meta: {
+      title: 'Home'
+    }
   },
 
   {
@@ -44,6 +53,9 @@ const routes = [
     component: LoginView,
     beforeEnter: (to: RouteLocationNormalized, from: RouteLocationNormalized, next: Function) => {
       GIsGuest(to, from, next);
+    },
+    meta: {
+      title: 'Login'
     }
   },
 
@@ -52,6 +64,9 @@ const routes = [
     component: RegisterView,
     beforeEnter: (to: RouteLocationNormalized, from: RouteLocationNormalized, next: Function) => {
       GIsGuest(to, from, next);
+    },
+    meta: {
+      title: 'Register'
     }
   },
 
@@ -60,10 +75,13 @@ const routes = [
     component: DashboardView,
     beforeEnter: (to: RouteLocationNormalized, from: RouteLocationNormalized, next: Function) => {
       GIsUser(to, from, next);
+    },
+    meta: {
+      title: 'Dashboard'
     }
   },
 
-  // Pass via props the request of the list
+  // @todo: list title as title
 
   {
     path: '/list/:id',
@@ -75,6 +93,50 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+});
+
+// change title before entering route
+
+router.beforeEach(async (to, from, next) => {
+
+  // Get token via auth
+
+  const auth = inject('auth') as IAuth;
+  const token = auth.getToken();
+  
+  const appName = 'Tiny Wishlist';
+
+  const { title } = to.meta;
+
+  const getDefaultTitle = () => {
+    return title ? `${title} - ${appName}` : appName;
+  }
+
+  const id = to.params.id as string ?? null;
+
+  // If id is present, and in listView
+  // fetch list data and change title
+  // otherwise get default title
+
+  if (to.path.includes('/list/')) {
+
+    // fetch list
+
+    const request = await SApi.getList(id, token);
+
+    if (request.ok) {
+      const response = await request.json() as IList;
+      document.title = `${response.title} - ${appName}`;
+    } else {
+      document.title = getDefaultTitle();
+    }
+
+  } else {
+    document.title = getDefaultTitle();
+  }
+
+  next();
+
 });
 
 export default router;
