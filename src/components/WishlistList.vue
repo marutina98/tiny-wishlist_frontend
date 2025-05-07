@@ -467,6 +467,11 @@ import type IRequestNewGroup from '@/interfaces/request-new-group.interface';
 
   });
 
+  const shareableLink = computed(() => {
+    const baseURL = 'http://localhost:5173/list/';
+    return baseURL + props.list.id;
+  });
+
 </script>
 
 <template>
@@ -474,6 +479,33 @@ import type IRequestNewGroup from '@/interfaces/request-new-group.interface';
   <div class="list">
 
     <div class="settings">
+
+      <UBadge size="xl" color="neutral" variant="outline">
+        {{ !list.private ? 'Public' : 'Private' }}
+      </UBadge>
+
+      <UModal v-if="!list.private">
+        <UButton
+          icon="i-system-uicons:share-alt"
+          label="Share List"
+        />
+        
+        <!-- @todo: when link is clicked, copy to clipboard -->
+
+        <template #content>
+          <div class="shareable">
+              <div class="shareable-link">
+              {{ shareableLink }}
+            </div>
+
+            <USeparator />
+
+            <div class="shareable-networks">
+
+            </div>
+          </div>
+        </template>
+      </UModal>
 
       <UModal v-model:open="openModalNewItem">
         <UButton icon="i-system-uicons:plus-circle" label="Add Item" />
@@ -686,6 +718,14 @@ import type IRequestNewGroup from '@/interfaces/request-new-group.interface';
   .list-form,
   .form {
     @apply flex flex-col gap-2;
+  }
+
+  .shareable {
+    @apply flex flex-col gap-2 p-2;
+  }
+
+  .shareable-link {
+    @apply text-sm text-center p-2 border border-stone-100 rounded-md;
   }
 
 </style>
