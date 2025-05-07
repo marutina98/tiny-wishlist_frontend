@@ -483,6 +483,28 @@
     });
   }
 
+  const copyLinkInClipboard = async (url: string) => {
+
+    try {
+
+      await navigator.clipboard.writeText(url);
+
+      toast.add({
+        title: 'Link was copied in clipboard succesfully.',
+        color: 'success'
+      });
+
+    } catch (unknown) {
+
+      toast.add({
+        title: 'Link could not be copied in clipboard. Try again.',
+        color: 'error'
+      });
+
+    }
+
+  }
+
 </script>
 
 <template>
@@ -510,7 +532,7 @@
                 {{ shareableLink }}
               </div>
               <div class="shareable-link-button">
-                <UButton icon="i-system-uicons:clipboard-copy" color="neutral" variant="outline" />
+                <UButton @click="copyLinkInClipboard(shareableLink)" icon="i-system-uicons:clipboard-copy" color="neutral" variant="outline" />
               </div>
             </div>
 
