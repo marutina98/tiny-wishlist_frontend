@@ -3,18 +3,18 @@
   import * as v from 'valibot';
 
   import { computed, inject, reactive, ref, toRaw, onBeforeMount } from 'vue';
+  import {useShareLink} from 'vue3-social-sharing';
   
   import type IAuth from '@/interfaces/auth.interface';
   import type IGroup from '@/interfaces/group.interface';
+  import type IRequestNewItem from '@/interfaces/request-new-item.interface';
+  import type IRequestPutList from '@/interfaces/request-put-list.interface';
+  import type IRequestNewGroup from '@/interfaces/request-new-group.interface';
 
   import SApi from '@/services/api.service';
   import SHelpers from '@/services/helpers.service';
 
   import eventBusRefetch from '@/services/event-bus-refetch.service';
-  import type IRequestNewItem from '@/interfaces/request-new-item.interface';
-import type IUser from '@/interfaces/user.interface';
-import type IRequestPutList from '@/interfaces/request-put-list.interface';
-import type IRequestNewGroup from '@/interfaces/request-new-group.interface';
 
   const auth = inject('auth') as IAuth;
   const toast = useToast();
@@ -467,10 +467,21 @@ import type IRequestNewGroup from '@/interfaces/request-new-group.interface';
 
   });
 
+  // Share Link
+
   const shareableLink = computed(() => {
     const baseURL = 'http://localhost:5173/list/';
     return baseURL + props.list.id;
   });
+
+  const {shareLink} = useShareLink();
+
+  const share = (network: string, url: string) => {
+    shareLink({
+      network,
+      url
+    });
+  }
 
 </script>
 
@@ -494,14 +505,21 @@ import type IRequestNewGroup from '@/interfaces/request-new-group.interface';
 
         <template #content>
           <div class="shareable">
-              <div class="shareable-link">
-              {{ shareableLink }}
+            <div class="shareable-link">
+              <div class="shareable-link-text">
+                {{ shareableLink }}
+              </div>
+              <div class="shareable-link-button">
+                <UButton icon="i-system-uicons:clipboard-copy" color="neutral" variant="outline" />
+              </div>
             </div>
 
             <USeparator />
 
             <div class="shareable-networks">
-
+              <UButton @click="share('facebook', shareableLink)" color="neutral" variant="outline" icon="i-cib:facebook" />
+              <UButton @click="share('twitter', shareableLink)" color="neutral" variant="outline" icon="i-cib:twitter" />
+              <UButton @click="share('pinterest', shareableLink)" color="neutral" variant="outline" icon="i-cib:pinterest" />
             </div>
           </div>
         </template>
@@ -725,7 +743,20 @@ import type IRequestNewGroup from '@/interfaces/request-new-group.interface';
   }
 
   .shareable-link {
-    @apply text-sm text-center p-2 border border-stone-100 rounded-md;
+    @apply flex flex-row gap-2 items-center;
+  }
+
+  .shareable-link-text {
+    @apply text-xs text-center p-2 border border-stone-100 rounded-md;
+    min-width: calc(100% - 32px - (var(--spacing) * 2));
+  }
+
+  .shareable-link-button {
+    max-width: 32px;
+  }
+
+  .shareable-networks {
+    @apply flex flex-row gap-2 justify-center;
   }
 
 </style>
