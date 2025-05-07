@@ -6,10 +6,10 @@
 
   import type IGroup from '@/interfaces/group.interface';
   import type IAuth from '@/interfaces/auth.interface';
+  import type IRequestPutGroup from '@/interfaces/request-put-group.interface';
 
   import SApi from '@/services/api.service';
   import eventBusRefetch from '@/services/event-bus-refetch.service';
-import type IRequestPutGroup from '@/interfaces/request-put-group.interface';
 
   const auth = inject('auth') as IAuth;
 
@@ -188,12 +188,13 @@ import type IRequestPutGroup from '@/interfaces/request-put-group.interface';
         variant="subtle"
         trailing-icon="i-lucide-chevron-down"
         block @click="toggleCollapsible"
+        :disabled="group.archived"
       />
 
       <UButton @click="changeStatus(group.id)"
                :label="group.archived ? 'Make Group Active' : 'Archive Group'" />
 
-      <UModal v-model:open="openModalEdit">
+      <UModal v-if="!group.archived" v-model:open="openModalEdit">
         <UButton icon="i-system-uicons:pen" color="success" />
         <template #content>
           <div class="modal-form-wrapper">
@@ -210,7 +211,7 @@ import type IRequestPutGroup from '@/interfaces/request-put-group.interface';
         </template>
       </UModal>
 
-      <UModal v-model:open="openModalDelete">
+      <UModal v-if="!group.archived" v-model:open="openModalDelete">
         <UButton icon="i-system-uicons:trash" color="error" />
         <template #content>
           <div class="modal">
