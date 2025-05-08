@@ -1,3 +1,5 @@
+import type { Reactive } from 'vue';
+
 class SHelpers {
 
   public getPlaceholderImage() {
@@ -38,6 +40,16 @@ class SHelpers {
 
     } catch (error: unknown) {
       console.error(error);
+    }
+
+  }
+
+  public handleThumbnailChange(event: Event, state: Reactive<{thumbnail: File}> ) {
+
+    const target = event.target as HTMLInputElement;
+
+    if (target.files && target.files[0]) {
+      state.thumbnail = target.files[0];
     }
 
   }
