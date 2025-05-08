@@ -170,16 +170,6 @@
     editState.groupId = item.groupId;
 
   }
-
-  const handleThumbnailChange = (event: Event) => {
-
-    const target = event.target as HTMLInputElement;
-
-    if (target.files && target.files[0]) {
-      editState.thumbnail = target.files[0];
-    }
-
-  };
   
   const editItem = (id: string) => {
 
@@ -304,7 +294,7 @@
                   </UFormField>
 
                   <UFormField label="Thumbnail" name="thumbnail">
-                    <UInput @change="handleThumbnailChange" type="file" />
+                    <UInput @change="SHelpers.handleThumbnailChange($event, editState)" type="file" />
                   </UFormField>
 
                   <UFormField label="URL" name="url">

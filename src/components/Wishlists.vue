@@ -235,16 +235,6 @@
 
   }
 
-  const handleThumbnailChange = (event: Event) => {
-
-    const target = event.target as HTMLInputElement;
-
-    if (target.files && target.files[0]) {
-      listState.thumbnail = target.files[0];
-    }
-
-  };
-
   const createList = (user: IUser) => {
 
     const file = listState.thumbnail;
@@ -365,7 +355,7 @@
                 </UFormField>
 
                 <UFormField label="Thumbnail" name="thumbnail">
-                  <UInput @change="handleThumbnailChange" type="file" />
+                  <UInput @change="SHelpers.handleThumbnailChange($event, listState)" type="file" />
                 </UFormField>
 
                 <UFormField label="Private Status" name="private">

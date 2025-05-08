@@ -232,26 +232,6 @@
 
   }
 
-  const handleThumbnailChangeNewItem = (event: Event) => {
-
-    const target = event.target as HTMLInputElement;
-
-    if (target.files && target.files[0]) {
-      newItemState.thumbnail = target.files[0];
-    }
-
-  };
-
-  const handleThumbnailChangeEditList = (event: Event) => {
-
-    const target = event.target as HTMLInputElement;
-
-    if (target.files && target.files[0]) {
-      editListState.thumbnail = target.files[0];
-    }
-
-  };
-
   const submitNewItem = (userId: string) => {
     
     const file = newItemState.thumbnail;
@@ -568,7 +548,7 @@
               </UFormField>
 
               <UFormField label="Thumbnail" name="thumbnail">
-                <UInput @change="handleThumbnailChangeNewItem" type="file" />
+                <UInput @change="SHelpers.handleThumbnailChange($event, newItemState)" type="file" />
               </UFormField>
 
               <UFormField label="URL" name="url">
@@ -620,7 +600,7 @@
               </UFormField>
 
               <UFormField label="Thumbnail" name="thumbnail">
-                <UInput @change="handleThumbnailChangeEditList" type="file" />
+                <UInput @change="SHelpers.handleThumbnailChange($event, editListState)" type="file" />
               </UFormField>
 
               <UFormField label="Private Status" name="private">
