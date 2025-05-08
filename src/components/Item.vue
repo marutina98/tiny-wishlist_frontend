@@ -24,6 +24,8 @@
 
 <template>
 
+  <!-- @todo: remake item like in WishlistItem -->
+
   <!-- Add Background Image in variable (thumbnail or placeholder) -->
 
   <div class="item" :class="{ 'item-reserved': item.reserved }" :style="css">
