@@ -65,19 +65,24 @@
 
   const listSchema = v.object({
     title: v.pipe(
-      v.string('Title must be a string.')
+      v.string('Title must be a string.'),
+      v.minLength(3, 'Title must be at least 3 characters long.')
     ),
     description: v.pipe(
-      v.string('Description must be a string.')
+      v.nullable(
+        v.string('Description must be a string.')
+      )
     ),
-    thumbnail: v.pipe(
-      v.file('Please select an image file.'),
-      v.mimeType(['image/jpeg', 'image/png'], 'Please select a JPEG or PNG file.'),
-      v.maxSize(1024 * 1024 * 2, 'Please select a file smaller than 2 MB.'),
+    thumbnail: v.optional(
+      v.pipe(
+        v.file(),
+        v.mimeType(['image/jpeg', 'image/png'], 'Please select a JPEG or PNG file.'),
+        v.maxSize(1024 * 1024 * 2, 'Please select a file smaller than 2 MB.')
+      )
     ),
-    archived: v.pipe(v.boolean()),
-    reserved: v.pipe(v.boolean()),
-    priorityId: v.pipe(v.number())
+    archived: v.optional(v.boolean()),
+    reserved: v.optional(v.boolean()),
+    priorityId: v.number()
   });
 
 
