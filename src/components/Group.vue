@@ -74,7 +74,7 @@
   @reference 'tailwindcss';
 
   .items:not(.no-items) {
-    @apply gap-4 grid grid-cols-3 p-2;
+    @apply gap-4 grid grid-cols-4 p-2;
   }
 
   .items.no-items {

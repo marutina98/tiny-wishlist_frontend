@@ -517,13 +517,11 @@
         {{ !list.private ? 'Public' : 'Private' }}
       </UBadge>
 
-      <UModal v-if="!list.private">
+      <UModal>
         <UButton
           icon="i-system-uicons:share-alt"
           label="Share List"
         />
-        
-        <!-- @todo: when link is clicked, copy to clipboard -->
 
         <template #content>
           <div class="shareable">
