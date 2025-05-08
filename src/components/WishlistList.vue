@@ -470,6 +470,21 @@
     });
   }
 
+  const networks = [
+    {
+      icon: 'i-cib:facebook',
+      name: 'facebook'
+    },
+    {
+      icon: 'i-cib:twitter',
+      name: 'twitter'
+    },
+    {
+      icon: 'i-cib:pinterest',
+      name: 'pinterest'
+    },
+  ]
+
   const copyLinkInClipboard = async (url: string) => {
 
     try {
@@ -524,9 +539,13 @@
             <USeparator />
 
             <div class="shareable-networks">
-              <UButton @click="share('facebook', shareableLink)" color="neutral" variant="outline" icon="i-cib:facebook" />
-              <UButton @click="share('twitter', shareableLink)" color="neutral" variant="outline" icon="i-cib:twitter" />
-              <UButton @click="share('pinterest', shareableLink)" color="neutral" variant="outline" icon="i-cib:pinterest" />
+              <UButton v-for="network of networks"
+                @click="share(network.name, shareableLink)"
+                :key="network.name"
+                color="neutral"
+                variant="outline"
+                :icon="network.icon"
+              />
             </div>
           </div>
         </template>
