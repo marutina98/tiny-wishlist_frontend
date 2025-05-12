@@ -286,14 +286,14 @@
           eventBusRefetch.emit(true);
 
           toast.add({
-            title: 'Item was updated succesfully.',
+            title: 'Item was created succesfully.',
             color: 'success'
           });
 
           } else {
 
           toast.add({
-            title: 'Item could not be updated. Try again.',
+            title: 'Item could not be created. Try again.',
             color: 'error'
           });
 
