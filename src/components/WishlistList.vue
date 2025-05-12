@@ -483,7 +483,7 @@
       icon: 'i-cib:pinterest',
       name: 'pinterest'
     },
-  ]
+  ];
 
   const copyLinkInClipboard = async (url: string) => {
 
